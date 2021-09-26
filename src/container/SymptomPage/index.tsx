@@ -20,8 +20,8 @@ function SymptomPage() {
             const response = await axios(
                 "http://52.221.193.237/api/v1/symptoms?code=1&limit=20&offset=1"
             );
-            console.log(response.data.content);
-            console.log(response.data.currentPage);
+            // console.log(response.data.content);
+            // console.log(response.data.currentPage);
             setDatatable(response.data.content);
             setCurrentPage(response.data.currentPage);
             setTotalItem(response.data.totalCount);
@@ -37,7 +37,7 @@ function SymptomPage() {
                 data={datatable}
                 editable={{
                     onRowAdd: (newData) =>
-                        new Promise((resolve, reject) => {
+                        new Promise((resolve) => {
                             setTimeout(() => {
                                 /* setData([...data, newData]); */
                                 setDatatable(newData);
@@ -46,7 +46,7 @@ function SymptomPage() {
                         }),
                 }}
                 actions={[
-                    (rowData) => ({
+                    () => ({
                         icon: "delete",
                         tooltip: "Delete User",
                         onClick: (event, rowData) => alert("You saved " + rowData),
@@ -56,9 +56,8 @@ function SymptomPage() {
                     actionsColumnIndex: -1,
                     addRowPosition: "first",
                 }}
-                onChangePage={() => {
-                    setCurrentPage;
-                }}
+                totalCount={totalItem}
+                page={currentPage}
             />
         </div>
     );
