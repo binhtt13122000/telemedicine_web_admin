@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from "@mui/material/Button";
@@ -16,11 +16,7 @@ export default function SnackbarSuccess() {
         setOpen(true);
     };
 
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
+    const handleClose = () => {
         setOpen(false);
     };
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from "@mui/material/Button";
@@ -9,18 +9,14 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function SnackbarError() {
+function SnackbarError() {
     const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
         setOpen(true);
     };
 
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
+    const handleClose = () => {
         setOpen(false);
     };
 
@@ -37,3 +33,5 @@ export default function SnackbarError() {
         </Stack>
     );
 }
+
+export default SnackbarError;
