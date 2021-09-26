@@ -14,9 +14,12 @@ export default function SnackbarWarning() {
 
     const handleClick = () => {
         setOpen(true);
+        return "test";
     };
+
     const handleClose = () => {
         setOpen(false);
+        return "test";
     };
 
     return (
