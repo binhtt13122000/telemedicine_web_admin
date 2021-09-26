@@ -34,3 +34,5 @@ const SnackbarSuccess: React.FC = (): ReactElement => {
         </Stack>
     );
 };
+
+export default SnackbarSuccess;
