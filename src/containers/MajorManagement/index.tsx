@@ -1,14 +1,12 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-import MaterialTable from "material-table";
+import MaterialTable, { Localization } from "material-table";
 import { ColumnTable, IPagingSupport } from "src/common/types";
 
-import { InputAdornment, TablePagination } from "@material-ui/core";
+import { TablePagination } from "@material-ui/core";
+import TextFieldFilter from "src/components/TextFieldFilter";
 
 import { Major } from "./models/Major.model";
-
-import { FilterList } from "@mui/icons-material";
-import { TextField } from "@mui/material";
 
 const MajorManagement = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -32,27 +30,8 @@ const MajorManagement = () => {
             filtering: true,
             title: "Tên chuyên ngành",
             field: "name",
-            filterComponent: () => {
-                return (
-                    <TextField
-                        variant="standard"
-                        type="text"
-                        name="name"
-                        key="name"
-                        value={params["name"]}
-                        autoFocus
-                        onChange={(e) => {
-                            filter(e.target.value, "name");
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <FilterList />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                );
+            filterComponent: function FilterComponent() {
+                return <TextFieldFilter filter={filter} name="name" value={params["name"]} />;
             },
         },
         {
@@ -213,14 +192,7 @@ const MajorManagement = () => {
                 onRowDelete: (oldData) => onDelete(oldData.id),
             }}
             title="Major Management"
-            localization={{
-                body: {
-                    emptyDataSourceMessage: "No records to display",
-                    filterRow: {
-                        filterTooltip: "Filter",
-                    },
-                },
-            }}
+            localization={localization}
             components={{
                 Pagination: function TblPaginator(props) {
                     return (
@@ -244,6 +216,15 @@ const MajorManagement = () => {
             }}
         />
     );
+};
+
+const localization: Localization = {
+    body: {
+        emptyDataSourceMessage: "No records to display",
+        filterRow: {
+            filterTooltip: "Filter",
+        },
+    },
 };
 
 export default MajorManagement;
