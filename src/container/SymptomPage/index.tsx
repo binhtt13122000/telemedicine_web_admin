@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 import axios from "axios";
 import MaterialTable from "material-table";
 
-function SymptomPage() {
+const SymptomPage: React.FC = (): ReactElement => {
     const columns = [
         { title: "ID", field: "id" },
         { title: "Symptom code", field: "symptomCode" },
@@ -61,6 +61,6 @@ function SymptomPage() {
             />
         </div>
     );
-}
+};
 
 export default SymptomPage;

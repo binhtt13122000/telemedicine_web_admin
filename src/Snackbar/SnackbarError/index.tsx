@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from "@mui/material/Button";
@@ -9,7 +9,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function SnackbarError() {
+const SnackbarError: React.FC = (): ReactElement => {
     const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
@@ -34,6 +34,6 @@ function SnackbarError() {
             </Snackbar>
         </Stack>
     );
-}
+};
 
 export default SnackbarError;
