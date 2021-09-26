@@ -9,7 +9,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function SnackbarError() {
+export default function SnackbarSuccess() {
     const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
@@ -27,17 +27,13 @@ export default function SnackbarError() {
     return (
         <Stack spacing={2} sx={{ width: "10%" }}>
             <Button variant="outlined" onClick={handleClick}>
-                Success Snackbar
+                Error Snackbar
             </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
                     Error
                 </Alert>
             </Snackbar>
-            {/* <Alert severity="error">This is an error message!</Alert>
-            <Alert severity="warning">This is a warning message!</Alert>
-            <Alert severity="info">This is an information message!</Alert>
-            <Alert severity="success">This is a success message!</Alert> */}
         </Stack>
     );
 }

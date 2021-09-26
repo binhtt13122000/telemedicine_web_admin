@@ -35,13 +35,17 @@ function SymptomPage() {
                 title="Manage Symptom"
                 columns={columns}
                 data={datatable}
+                editable={{
+                    onRowAdd: (newData) =>
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                /* setData([...data, newData]); */
+                                setDatatable(newData);
+                                resolve;
+                            }, 1000);
+                        }),
+                }}
                 actions={[
-                    {
-                        icon: "add",
-                        tooltip: "Add User",
-                        isFreeAction: true,
-                        onClick: (event) => alert("You want to add a new row"),
-                    },
                     (rowData) => ({
                         icon: "delete",
                         tooltip: "Delete User",
@@ -50,6 +54,7 @@ function SymptomPage() {
                 ]}
                 options={{
                     actionsColumnIndex: -1,
+                    addRowPosition: "first",
                 }}
                 onChangePage={() => {
                     setCurrentPage;

@@ -27,11 +27,11 @@ export default function SnackbarSuccess() {
     return (
         <Stack spacing={2} sx={{ width: "10%" }}>
             <Button variant="outlined" onClick={handleClick}>
-                Success Snackbar
+                Open success snackbar
             </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="info" sx={{ width: "100%" }}>
-                    Success
+                <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+                    Successful
                 </Alert>
             </Snackbar>
         </Stack>
