@@ -1,5 +1,3 @@
-import { Column } from "material-table";
-
 export interface IPagingSupport<T> {
     totalCount: number;
     pageSize: number;
@@ -9,5 +7,3 @@ export interface IPagingSupport<T> {
     previousPage: number | null;
     content: T[];
 }
-
-export interface ColumnTable<T extends Record<string, unknown>> extends Column<T> {}

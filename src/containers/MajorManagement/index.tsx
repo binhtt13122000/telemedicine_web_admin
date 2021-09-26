@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-import MaterialTable, { Localization } from "material-table";
-import { ColumnTable, IPagingSupport } from "src/common/types";
+import MaterialTable, { Column, Localization } from "material-table";
+import { IPagingSupport } from "src/common/types";
 
 import { TablePagination } from "@material-ui/core";
 import TextFieldFilter from "src/components/TextFieldFilter";
@@ -19,7 +19,7 @@ const MajorManagement: React.FC = () => {
         pageSize: 5,
         count: 0,
     });
-    const columns: ColumnTable<Major>[] = [
+    const columns: Column<Major>[] = [
         {
             filtering: false,
             title: "ID",
