@@ -5,7 +5,7 @@ import { FilterList } from "@mui/icons-material";
 export interface ITextField extends BaseTextFieldProps {
     filter: (term: string, field: string) => void;
 }
-const TextFieldFilter = (props: ITextField) => {
+const TextFieldFilter: React.FC<ITextField> = (props: ITextField) => {
     return (
         <TextField
             variant="standard"

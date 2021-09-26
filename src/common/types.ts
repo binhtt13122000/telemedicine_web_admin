@@ -10,4 +10,4 @@ export interface IPagingSupport<T> {
     content: T[];
 }
 
-export interface ColumnTable<T extends object> extends Column<T> {}
+export interface ColumnTable<T extends Record<string, unknown>> extends Column<T> {}

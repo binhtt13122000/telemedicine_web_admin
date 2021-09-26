@@ -8,7 +8,7 @@ import TextFieldFilter from "src/components/TextFieldFilter";
 
 import { Major } from "./models/Major.model";
 
-const MajorManagement = () => {
+const MajorManagement: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [majors, setMajors] = useState<Major[]>([]);
     const [params, setParams] = useState({
