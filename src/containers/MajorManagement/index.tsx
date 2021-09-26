@@ -69,8 +69,8 @@ const MajorManagement = () => {
             paramString = `&name=${params.name}`;
         }
         try {
-            let response = await fetch(`X?offset=${offset}&limit=${limit}${paramString}`);
-            let data: IPagingSupport<Major> = await response.json();
+            const response = await fetch(`X?offset=${offset}&limit=${limit}${paramString}`);
+            const data: IPagingSupport<Major> = await response.json();
             setMajors(data.content);
         } catch (ex) {
             // alert(ex);
@@ -82,8 +82,8 @@ const MajorManagement = () => {
     const callbackLoadData = useCallback(async (offset: number, limit: number) => {
         setLoading(true);
         try {
-            let response = await fetch(`X?offset=${offset}&limit=${limit}`);
-            let data: IPagingSupport<Major> = await response.json();
+            const response = await fetch(`X?offset=${offset}&limit=${limit}`);
+            const data: IPagingSupport<Major> = await response.json();
             setMajors(data.content);
             setPagination({
                 count: data.totalCount,
@@ -134,7 +134,7 @@ const MajorManagement = () => {
                 },
             });
             if (response.ok) {
-                let data: IPagingSupport<Major> = await response.json();
+                const data: IPagingSupport<Major> = await response.json();
                 loadData(1, pagination.pageSize);
                 setPagination({ ...pagination, page: 1, count: data?.totalCount });
             }
@@ -156,7 +156,7 @@ const MajorManagement = () => {
                 },
             });
             if (response.ok) {
-                let data: IPagingSupport<Major> = await response.json();
+                const data: IPagingSupport<Major> = await response.json();
                 loadData(1, pagination.pageSize);
                 setPagination({ ...pagination, page: 1, count: data?.totalCount });
             }
@@ -187,10 +187,10 @@ const MajorManagement = () => {
         setParams({
             name: term,
         });
-        let paramsString = `&${field}=${term}`;
+        const paramsString = `&${field}=${term}`;
         try {
-            let response = await fetch(`X?offset=1&limit=${pagination.pageSize}${paramsString}`);
-            let data: IPagingSupport<Major> = await response.json();
+            const response = await fetch(`X?offset=1&limit=${pagination.pageSize}${paramsString}`);
+            const data: IPagingSupport<Major> = await response.json();
             setMajors(data.content);
             setPagination({
                 ...pagination,
@@ -222,17 +222,19 @@ const MajorManagement = () => {
                 },
             }}
             components={{
-                Pagination: (props) => (
-                    <TablePagination
-                        {...props}
-                        rowsPerPageOptions={[5, 10, 20, 30]}
-                        count={pagination.count}
-                        onChangePage={(e, page: number) => handleChangePage(page)}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                        page={pagination.page - 1}
-                        rowsPerPage={pagination.pageSize}
-                    />
-                ),
+                Pagination: function TblPaginator(props) {
+                    return (
+                        <TablePagination
+                            {...props}
+                            rowsPerPageOptions={[5, 10, 20, 30]}
+                            count={pagination.count}
+                            onChangePage={(e, page: number) => handleChangePage(page)}
+                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                            page={pagination.page - 1}
+                            rowsPerPage={pagination.pageSize}
+                        />
+                    );
+                },
             }}
             options={{
                 actionsColumnIndex: -1,
