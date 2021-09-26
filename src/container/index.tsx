@@ -3,12 +3,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
 
-//   DataTable {
-//     id: string,
-//     name: string,
-//     description:
-// }
-
 function SymptomPage() {
     const columns = [
         { title: "ID", field: "id" },
