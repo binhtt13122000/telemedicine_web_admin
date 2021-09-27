@@ -2,8 +2,8 @@ import axios from "../../../axios";
 import { Hospital } from "../models/Hospital.model";
 
 class HospitalService {
-    getAll(limit: number, offset: number) {
-        return axios.get(`/hospitals?limit=${limit}&offset=${offset}`);
+    getAll(limit: number, offset: number, searchName?: string) {
+        return axios.get(`/hospitals?limit=${limit}&offset=${offset}${searchName}`);
     }
 
     getId(id: number) {
