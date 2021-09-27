@@ -1,5 +1,10 @@
 import React from "react";
 
+import { NavLink } from "react-router-dom";
+
+import { IRoute } from "../../common/types";
+import routes from "../../routes";
+
 import { Divider, List, ListItem, ListItemText, Toolbar, Typography } from "@mui/material";
 
 const CustomSidebar: React.FC = () => {
@@ -12,16 +17,12 @@ const CustomSidebar: React.FC = () => {
             </Toolbar>
             <Divider />
             <List>
-                {[
-                    "Trang chủ",
-                    "Danh sách Bác sĩ",
-                    "Danh sách Bệnh nhân",
-                    "Danh sách Bệnh viện",
-                    "Danh sách Triệu chứng",
-                ].map((text: string, index: number) => (
-                    <ListItem button key={index}>
-                        <ListItemText primary={text} />
-                    </ListItem>
+                {routes.map((route: IRoute) => (
+                    <NavLink exact to={route.path} key={route.key}>
+                        <ListItem button>
+                            <ListItemText primary={route.name} />
+                        </ListItem>
+                    </NavLink>
                 ))}
             </List>
         </React.Fragment>

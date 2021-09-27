@@ -2,12 +2,11 @@ import React, { useState } from "react";
 
 import MaterialTable from "material-table";
 
-import CustomSidebar from "../../components/CustomSidebar";
-
+// import CustomSidebar from "../../components/CustomSidebar";
 import { Hospital } from "./models/Hospital.model";
 import HospitalService from "./services/Hospital.service";
 
-import { Divider, Grid, Toolbar } from "@mui/material";
+// import { Divider, Grid, Toolbar } from "@mui/material";
 
 const Hospitals: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -19,40 +18,40 @@ const Hospitals: React.FC = () => {
         { title: "Thông tin chi tiết", field: "description", filtering: false },
     ];
 
-    const table = (
-        <MaterialTable
-            title="Hospitals List"
-            columns={columns}
-            data={(query) =>
-                new Promise((resolve) => {
-                    let searchValue = "";
-                    let param = "";
-                    if (query.filters.length > 0) {
-                        searchValue = query.filters[0].value.trim();
-                        if (searchValue !== "") {
-                            param = `&name=${searchValue}`;
-                        }
-                    }
-                    HospitalService.getAll(query.pageSize, query.page + 1, param).then(
-                        (response) => {
-                            resolve({
-                                data: response.data.content,
-                                page: response.data.currentPage - 1,
-                                totalCount: response.data.totalCount,
-                            });
-                        }
-                    );
-                })
-            }
-            isLoading={loading}
-            editable={{
-                onRowAdd: (newHospital: Hospital) => onAdd(newHospital),
-                onRowUpdate: (newHospital: Hospital) => onUpdate(newHospital),
-                onRowDelete: (hospital: Hospital) => onDelete(hospital),
-            }}
-            options={{ filtering: true }}
-        ></MaterialTable>
-    );
+    // const table = (
+    //     <MaterialTable
+    //         title="Hospitals List"
+    //         columns={columns}
+    //         data={(query) =>
+    //             new Promise((resolve) => {
+    //                 let searchValue = "";
+    //                 let param = "";
+    //                 if (query.filters.length > 0) {
+    //                     searchValue = query.filters[0].value.trim();
+    //                     if (searchValue !== "") {
+    //                         param = `&name=${searchValue}`;
+    //                     }
+    //                 }
+    //                 HospitalService.getAll(query.pageSize, query.page + 1, param).then(
+    //                     (response) => {
+    //                         resolve({
+    //                             data: response.data.content,
+    //                             page: response.data.currentPage - 1,
+    //                             totalCount: response.data.totalCount,
+    //                         });
+    //                     }
+    //                 );
+    //             })
+    //         }
+    //         isLoading={loading}
+    //         editable={{
+    //             onRowAdd: (newHospital: Hospital) => onAdd(newHospital),
+    //             onRowUpdate: (newHospital: Hospital) => onUpdate(newHospital),
+    //             onRowDelete: (hospital: Hospital) => onDelete(hospital),
+    //         }}
+    //         options={{ filtering: true }}
+    //     ></MaterialTable>
+    // );
 
     const onAdd = async (newHospital: Hospital) => {
         setLoading(true);
@@ -97,18 +96,50 @@ const Hospitals: React.FC = () => {
     };
 
     return (
-        <React.Fragment>
-            <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    <CustomSidebar />
-                </Grid>
-                <Grid item xs={8}>
-                    <Toolbar />
-                    <Divider />
-                    {table}
-                </Grid>
-            </Grid>
-        </React.Fragment>
+        // <React.Fragment>
+        //     <Grid container spacing={2}>
+        //         <Grid item xs={3}>
+        //             <CustomSidebar />
+        //         </Grid>
+        //         <Grid item xs={8}>
+        //             <Toolbar />
+        //             <Divider />
+        //             {table}
+        //         </Grid>
+        //     </Grid>
+        <MaterialTable
+            title="Danh sách Bệnh viện"
+            columns={columns}
+            data={(query) =>
+                new Promise((resolve) => {
+                    let searchValue = "";
+                    let param = "";
+                    if (query.filters.length > 0) {
+                        searchValue = query.filters[0].value.trim();
+                        if (searchValue !== "") {
+                            param = `&name=${searchValue}`;
+                        }
+                    }
+                    HospitalService.getAll(query.pageSize, query.page + 1, param).then(
+                        (response) => {
+                            resolve({
+                                data: response.data.content,
+                                page: response.data.currentPage - 1,
+                                totalCount: response.data.totalCount,
+                            });
+                        }
+                    );
+                })
+            }
+            isLoading={loading}
+            editable={{
+                onRowAdd: (newHospital: Hospital) => onAdd(newHospital),
+                onRowUpdate: (newHospital: Hospital) => onUpdate(newHospital),
+                onRowDelete: (hospital: Hospital) => onDelete(hospital),
+            }}
+            options={{ filtering: true }}
+        ></MaterialTable>
+        // </React.Fragment>
     );
 };
 
