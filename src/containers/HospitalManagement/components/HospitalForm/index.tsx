@@ -1,19 +1,19 @@
-import * as React from "react";
+import React from "react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { DrugType } from "../../models/DrugType.models";
+import { Hospital } from "../../models/Hospital.model";
 
-import { Card, Modal, TextField, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Button, Card, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
-export interface IDrugTypeForm {
-    open: boolean;
-    data: DrugType;
-    handleClose: (type: "SAVE" | "CANCEL", data?: DrugType, callback?: Function) => void;
+export interface IHospitalForm {
+    data: Hospital;
+    opened: boolean;
+    handleClose: (type: "SAVE" | "CANCEL", data?: Hospital, callback?: Function) => void;
 }
-const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
+
+const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
     const { data } = props;
     const {
         register,
@@ -21,27 +21,26 @@ const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
         formState: { errors },
         setValue,
         clearErrors,
-    } = useForm<DrugType>({});
+    } = useForm<Hospital>({});
 
     React.useEffect(() => {
-        setValue("name", data.name);
         setValue("id", data.id);
+        setValue("hospitalCode", data.hospitalCode);
+        setValue("name", data.name);
+        setValue("address", data.address);
         setValue("description", data.description);
     }, [data, setValue]);
 
-    const submitHandler: SubmitHandler<DrugType> = (data: DrugType) => {
+    const submitHandler: SubmitHandler<Hospital> = (data: Hospital) => {
         // eslint-disable-next-line no-console
         console.log(data);
         if (data) {
             props.handleClose("SAVE", data, clearErrors);
         }
     };
+
     return (
-        <Modal
-            open={props.open}
-            aria-labelledby="drugtype-dialog"
-            aria-describedby="alert-drugtype-description"
-        >
+        <Modal open={props.opened}>
             <Card
                 sx={{
                     position: "absolute" as "absolute",
@@ -58,7 +57,7 @@ const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
             >
                 <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
                     <Typography variant="h6" component="h2">
-                        Thông tin Loại thuốc
+                        Thông tin Bệnh viện
                     </Typography>
                 </Box>
                 <Box
@@ -71,11 +70,27 @@ const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
                 >
                     <TextField
                         id="outlined-basic"
-                        label="Tên loại thuốc"
+                        label="Mã bệnh viện"
                         variant="outlined"
+                        defaultValue={props.data.hospitalCode}
+                        {...register("hospitalCode", { required: true })}
+                    />
+                    {errors.hospitalCode && <p>Code is required.</p>}
+                    <TextField
+                        id="outlined-basic"
+                        label="Tên bệnh viện"
+                        variant="outlined"
+                        defaultValue={props.data.name}
                         {...register("name", { required: true })}
                     />
                     {errors.name && <p>Name is required.</p>}
+                    <TextField
+                        id="outlined-basic"
+                        label="Địa chỉ"
+                        variant="outlined"
+                        defaultValue={props.data.address}
+                        {...register("address")}
+                    />
                     <TextField
                         id="outlined-basic"
                         label="Mô tả"
@@ -85,7 +100,6 @@ const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
                         multiline
                         rows={5}
                     />
-
                     <Box
                         sx={{
                             mx: "auto",
@@ -110,4 +124,4 @@ const DrugTypeForm: React.FC<IDrugTypeForm> = (props: IDrugTypeForm) => {
     );
 };
 
-export default DrugTypeForm;
+export default HospitalForm;
