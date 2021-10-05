@@ -6,6 +6,6 @@ export type Drug = {
     producer: string;
     drugOrigin: string;
     drugForm: string;
-    drugType?: DrugType;
+    drugType: DrugType;
     drugTypeId: number;
 };
