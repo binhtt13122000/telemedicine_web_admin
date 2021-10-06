@@ -11,6 +11,7 @@ import DoctorDetails from "src/containers/DoctorDetail";
 import Doctors from "src/containers/DoctorManagement";
 import Drugs from "src/containers/DrugManagement";
 import DrugTypes from "src/containers/DrugTypeManagement";
+import HealthCheck from "src/containers/HealthCheck";
 import Hospitals from "src/containers/HospitalManagement";
 import Layout from "src/containers/Layout";
 import Login from "src/containers/Login";
@@ -96,6 +97,11 @@ export const privateRoutes = [
         path: "/certifications",
         name: "certifications",
         component: Certifications,
+    },
+    {
+        path: "/health-checks",
+        name: "healthChecks",
+        component: HealthCheck,
     },
 ];
 

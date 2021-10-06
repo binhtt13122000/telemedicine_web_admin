@@ -17,8 +17,8 @@
 // };
 
 export type Patient = {
-    id?: number;
-    email?: string;
+    id: number;
+    email: string;
     backgroundDisease: string;
     allergy: string;
     bloodGroup: string;

@@ -5,6 +5,9 @@ import { API_ROOT_URL } from "src/configurations";
 import CRUDTable from "src/components/CRUDTable";
 import { IColumn } from "src/components/CRUDTable/Models";
 
+import { Chip } from "@mui/material";
+import { Box } from "@mui/system";
+
 const Doctors: React.FC = () => {
     const columns: IColumn[] = [
         {
@@ -54,6 +57,16 @@ const Doctors: React.FC = () => {
             align: "left",
             title: "Kích hoạt",
             index: 6,
+            render: (props: boolean) => {
+                return (
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                        <Chip
+                            label={props ? "VERIFY" : "NOT VERIFY"}
+                            color={props ? "success" : "secondary"}
+                        />
+                    </Box>
+                );
+            },
             width: "80",
         },
     ];

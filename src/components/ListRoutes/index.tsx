@@ -57,6 +57,11 @@ export const routes = [
         path: "/certifications",
         icon: <InboxIcon />,
     },
+    {
+        name: "Health checks",
+        path: "/health-checks",
+        icon: <InboxIcon />,
+    },
 ];
 
 export const routesControlApp = [
