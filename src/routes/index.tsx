@@ -8,6 +8,7 @@ import Certifications from "src/containers/CertificateManagement";
 import DiseaseGroups from "src/containers/DiseaseGroupManagement";
 import Diseases from "src/containers/DiseaseManagemenent";
 import DoctorDetails from "src/containers/DoctorDetail";
+import Doctors from "src/containers/DoctorManagement";
 import Drugs from "src/containers/DrugManagement";
 import DrugTypes from "src/containers/DrugTypeManagement";
 import Hospitals from "src/containers/HospitalManagement";
@@ -60,6 +61,11 @@ export const privateRoutes = [
         path: "/patients/:id",
         name: "patientDetail",
         component: PatientDetail,
+    },
+    {
+        path: "/doctors",
+        name: "doctor",
+        component: Doctors,
     },
     {
         path: "/doctors/:id",
