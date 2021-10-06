@@ -2,24 +2,32 @@ import React from "react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { Autocomplete } from "@material-ui/lab";
+
 import { Drug } from "../../models/Drug.model";
 
 import { Button, Card, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { DrugType } from "src/containers/DrugTypeManagement/models/DrugType.models";
 
 export interface IDrugForm {
     data: Drug;
+    drugTypes: DrugType[];
     opened: boolean;
     handleClose: (type: "SAVE" | "CANCEL", data?: Drug, callback?: Function) => void;
 }
 
 const DrugForm: React.FC<IDrugForm> = (props: IDrugForm) => {
+    // const [drugTypes, setDrugTypes] = useState<DrugType[]>([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     const { data } = props;
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
+        // getValues,
         clearErrors,
     } = useForm<Drug>({});
 
@@ -29,13 +37,18 @@ const DrugForm: React.FC<IDrugForm> = (props: IDrugForm) => {
         setValue("producer", data.producer);
         setValue("drugOrigin", data.drugOrigin);
         setValue("drugForm", data.drugForm);
-        setValue("drugType.name", data.drugType.name);
+        setValue("drugType", data.drugType);
     }, [data, setValue]);
 
     const submitHandler: SubmitHandler<Drug> = (data: Drug) => {
         // eslint-disable-next-line no-console
         console.log(data);
         if (data) {
+            // const drugTypeId = props.drugTypes.find((item) => {
+            //     if (item.name === data.drugType.name) return item.id;
+            // });
+            // const res = { ...data, drugTypeId };
+            // console.log(res);
             props.handleClose("SAVE", data, clearErrors);
         }
     };
@@ -63,6 +76,7 @@ const DrugForm: React.FC<IDrugForm> = (props: IDrugForm) => {
                 </Box>
                 <Box
                     component="form"
+                    onSubmit={handleSubmit(submitHandler)}
                     sx={{
                         "& > :not(style)": {
                             m: 2,
@@ -70,44 +84,54 @@ const DrugForm: React.FC<IDrugForm> = (props: IDrugForm) => {
                             justifyContent: "center",
                         },
                     }}
-                    noValidate
-                    autoComplete="off"
                 >
                     <TextField
-                        id="outlined-basic"
-                        label="Tên thuốc"
+                        id="drug-name"
+                        label="Tên thuốc *"
                         variant="outlined"
-                        defaultValue={props.data.name}
+                        error={!!errors.name}
+                        helperText={errors.name && "Tên thuốc là bắt buộc"}
                         {...register("name", { required: true })}
                     />
-                    {errors.name && <p>Name is required.</p>}
                     <TextField
-                        id="outlined-basic"
+                        id="drug-producer"
                         label="Nhà sản xuất"
                         variant="outlined"
-                        defaultValue={props.data.producer}
                         {...register("producer")}
                     />
                     <TextField
-                        id="outlined-basic"
+                        id="drug-origin"
                         label="Xuất xứ"
                         variant="outlined"
-                        defaultValue={props.data.drugOrigin}
                         {...register("drugOrigin")}
                     />
                     <TextField
-                        id="outlined-basic"
+                        id="drug-form"
                         label="Định dạng"
                         variant="outlined"
-                        defaultValue={props.data.drugForm}
                         {...register("drugForm")}
                     />
-                    <TextField
-                        id="outlined-basic"
-                        label="Tên loại thuốc"
-                        variant="outlined"
-                        defaultValue={props.data.drugType.name}
-                        {...register("drugType.name")}
+                    <Autocomplete
+                        options={props.drugTypes}
+                        getOptionLabel={(drugType: DrugType) => drugType.name}
+                        onChange={(e, newValue) => {
+                            if (newValue) {
+                                setValue("drugType", newValue);
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Tên loại thuốc *"
+                                variant="outlined"
+                                // defaultValue={props.drugTypes.find(
+                                //     (item: DrugType) => item.name === getValues().drugType.name
+                                // )}
+                                error={!!errors.drugType}
+                                helperText={errors.drugType && "This is required!"}
+                                {...register("drugType", { required: true })}
+                            />
+                        )}
                     />
                     <Box
                         sx={{
@@ -117,14 +141,14 @@ const DrugForm: React.FC<IDrugForm> = (props: IDrugForm) => {
                             "& > :not(style)": { m: 1 },
                         }}
                     >
-                        <Button variant="contained" onClick={handleSubmit(submitHandler)} autoFocus>
-                            Lưu
-                        </Button>
                         <Button
                             variant="outlined"
                             onClick={() => props.handleClose("CANCEL", undefined, clearErrors)}
                         >
                             Hủy
+                        </Button>
+                        <Button variant="contained" type="submit" autoFocus>
+                            Lưu
                         </Button>
                     </Box>
                 </Box>

@@ -7,6 +7,7 @@ import CRUDTable from "src/components/CRUDTable";
 import { IColumn } from "src/components/CRUDTable/Models";
 
 import { DrugType } from "../DrugTypeManagement/models/DrugType.models";
+import DrugTypeService from "../DrugTypeManagement/services/DrugType.service";
 import { Drug } from "./models/Drug.model";
 import DrugService from "./services/Drug.service";
 
@@ -22,6 +23,7 @@ const Drugs: React.FC = () => {
     };
     const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
     const [data, setData] = useState<Drug>(initData);
+    const [drugTypes, setDrugTypes] = useState<DrugType[]>([]);
     const [reload, setReload] = useState<Function>(() => {});
 
     const colums: IColumn[] = [
@@ -43,7 +45,6 @@ const Drugs: React.FC = () => {
             field: "drugType",
             align: "left",
             title: "Tên loại thuốc",
-            disableFilter: true,
             index: 6,
             render: (props: DrugType) => {
                 return <React.Fragment>{props.name}</React.Fragment>;
@@ -52,15 +53,28 @@ const Drugs: React.FC = () => {
         },
     ];
 
+    const getDrugTypes = async () => {
+        try {
+            const response = await DrugTypeService.get(20, 1);
+            if (response.status === 200) {
+                setDrugTypes(response.data.content);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const addRowData = async (callback: Function) => {
         setIsOpenForm(true);
         setData(initData);
+        getDrugTypes();
         setReload(() => callback);
     };
 
     const updateRowData = async (rowData: Drug, callback: Function) => {
         setIsOpenForm(true);
         setData(rowData);
+        getDrugTypes();
         setReload(() => callback);
     };
 
@@ -106,7 +120,12 @@ const Drugs: React.FC = () => {
 
     return (
         <React.Fragment>
-            <DrugForm opened={isOpenForm} data={data} handleClose={handleClose} />
+            <DrugForm
+                opened={isOpenForm}
+                data={data}
+                handleClose={handleClose}
+                drugTypes={drugTypes}
+            />
             <CRUDTable
                 title="Quản lí Thuốc"
                 enableFilter
