@@ -8,6 +8,7 @@ import { IColumn } from "src/components/CRUDTable/Models";
 import { HealthCheck } from "./models/HealthCheck.model";
 
 import { Typography } from "@mui/material";
+import Util from "src/utils/Util";
 
 // import Util from "src/utils/Util";
 
@@ -39,7 +40,7 @@ const HealthChecks: React.FC = () => {
                     </React.Fragment>
                 );
             },
-            width: "250",
+            width: "230",
         },
         {
             field: "height",
@@ -82,9 +83,9 @@ const HealthChecks: React.FC = () => {
             align: "left",
             title: "Ngày đăng ký",
             index: 8,
-            // render: (props: string) => {
-            //     return <Typography align="center">{Util.convertDate(props)}</Typography>;
-            // },
+            render: (props: string) => {
+                return <Typography align="center">{Util.convertDate(props)}</Typography>;
+            },
             width: "80",
         },
         {
@@ -93,7 +94,8 @@ const HealthChecks: React.FC = () => {
             title: "Ngày hủy",
             index: 9,
             // render: (props: string) => {
-            //     return <Typography align="center">{Util.convertDate(props)}</Typography>;
+            //     return
+            //     <Typography align="center">{Util.convertDate(props)}</Typography>;
             // },
             width: "80",
         },
@@ -106,6 +108,18 @@ const HealthChecks: React.FC = () => {
         },
     ];
 
+    // const addRowData = async (callback: Function) => {
+    //     setOpen(true);
+    //     setData(initHealthCheck);
+    //     setReload(() => callback);
+    // };
+
+    // const updateRowData = async (rowData: HealthCheck, callback: Function) => {
+    //     setOpen(true);
+    //     setData(rowData);
+    //     setReload(() => callback);
+    // };
+
     return (
         <React.Fragment>
             <CRUDTable
@@ -114,6 +128,9 @@ const HealthChecks: React.FC = () => {
                 sort
                 query={`${API_ROOT_URL}/health-checks`}
                 columns={columns}
+                action={{
+                    onDelete: true,
+                }}
             />
         </React.Fragment>
     );

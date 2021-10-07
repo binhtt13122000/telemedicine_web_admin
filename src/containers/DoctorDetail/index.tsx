@@ -3,7 +3,6 @@ import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import Moment from "moment";
 import { useHistory, useParams } from "react-router";
 import axios from "src/axios";
-import { API_ROOT_URL } from "src/configurations";
 
 import { Box } from "@material-ui/core";
 import { ConfirmModal } from "src/components/ConfirmModal";
@@ -12,6 +11,7 @@ import useSnackbar from "src/components/Snackbar/useSnackbar";
 import { Account } from "../AccountManagement/models/Account.model";
 import { Doctors } from "./models/Doctor.model";
 
+// import { Email } from "@mui/icons-material";
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -67,21 +67,23 @@ const DoctorDetails: React.FC = () => {
     };
 
     const params = useParams<{ id: string }>();
-    const accountId = params.id;
+    const email = params.id;
 
     let gender = "Mr. ";
     if (!loading && !account?.isMale) {
         gender = "Mrs. ";
     }
-    const getAccountById = useCallback(
-        async (accountId) => {
+    const getAccountByEmail = useCallback(
+        async (email) => {
             setLoading(true);
             try {
-                const response = await axios.get("/accounts/" + accountId);
+                const response = await axios.get(`/accounts/${email}?search-type=Email`);
+                // eslint-disable-next-line no-console
+                console.log(response);
                 if (response.status === 200) {
                     const accountRes: Account = response.data;
                     setAccount(accountRes);
-                    const res = await axios.get("/doctors/email/" + accountRes?.email);
+                    const res = await axios.get(`/doctors/${email}?search-type=Email`);
                     if (res.status === 200) {
                         setDoctor(res.data);
                     }
@@ -108,14 +110,49 @@ const DoctorDetails: React.FC = () => {
     ) => {
         if (action === "CONFIRM") {
             try {
-                const response = await axios.patch(`${API_ROOT_URL}/doctors/` + accountId);
+                const response = await axios.get(`/doctors/${email}?search-type=Email`);
+                // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
                 if (response.status === 200) {
-                    setVerifyDoctor(!verifyDoctor);
-                    showSnackbar({
-                        children: "Cập nhật trạng thái tài khoản thành công",
-                        variant: "filled",
-                        severity: "success",
-                    });
+                    const accountRes: Doctors = response.data;
+                    const res = await axios.patch(`/doctors/${accountRes?.id}`);
+                    if (res.status === 200) {
+                        setVerifyDoctor(!verifyDoctor);
+                        showSnackbar({
+                            children: "Cập nhật trạng thái tài khoản thành công",
+                            variant: "filled",
+                            severity: "success",
+                        });
+                    }
+                }
+            } catch (error) {
+                showSnackbar({
+                    children: "Cập nhật trạng thái tài khoản thất bại",
+                    variant: "filled",
+                    severity: "error",
+                });
+            }
+        }
+        setIsOpenConfirmModal(false);
+    };
+    const handleLockConfirmModal = async (
+        e: React.MouseEvent<HTMLButtonElement | MouseEvent>,
+        action: "CONFIRM" | "CANCEL"
+    ) => {
+        if (action === "CONFIRM") {
+            try {
+                const response = await axios.get(`/doctors/${email}?search-type=Email`);
+                // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
+                if (response.status === 200) {
+                    const accountRes: Doctors = response.data;
+                    const res = await axios.patch(`/doctors/${accountRes?.id}`);
+                    if (res.status === 200) {
+                        setLockAccount(!lockAccount);
+                        showSnackbar({
+                            children: "Cập nhật trạng thái tài khoản thành công",
+                            variant: "filled",
+                            severity: "success",
+                        });
+                    }
                 }
             } catch (error) {
                 showSnackbar({
@@ -128,36 +165,11 @@ const DoctorDetails: React.FC = () => {
         setIsOpenConfirmModal(false);
     };
 
-    const handleLockConfirmModal = async (
-        e: React.MouseEvent<HTMLButtonElement | MouseEvent>,
-        action: "CONFIRM" | "CANCEL"
-    ) => {
-        if (action === "CONFIRM") {
-            try {
-                const response = await axios.patch(`${API_ROOT_URL}/delete/` + accountId);
-                if (response.status === 200) {
-                    setLockAccount(!lockAccount);
-                    showSnackbar({
-                        children: "Cập nhật trạng thái tài khoản thành công",
-                        variant: "filled",
-                        severity: "success",
-                    });
-                }
-            } catch (error) {
-                showSnackbar({
-                    children: "Cập nhật trạng thái tài khoản thất bại",
-                    variant: "filled",
-                    severity: "error",
-                });
-            }
-        }
-        setIsOpenLockConfirmModal(false);
-    };
-
     useEffect(() => {
-        getAccountById(accountId);
+        // getAccountById(accountId);
+        getAccountByEmail(email);
         // verifyAccount(accountId);
-    }, [accountId, getAccountById]);
+    }, [email, getAccountByEmail]);
 
     const profile = (
         <Card>
