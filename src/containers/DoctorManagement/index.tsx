@@ -29,7 +29,7 @@ const Doctors: React.FC = () => {
             renderLink: () => {
                 return "/doctors";
             },
-            width: "250",
+            width: "230",
         },
         {
             field: "scopeOfPractice",

@@ -108,18 +108,6 @@ const HealthChecks: React.FC = () => {
         },
     ];
 
-    // const addRowData = async (callback: Function) => {
-    //     setOpen(true);
-    //     setData(initHealthCheck);
-    //     setReload(() => callback);
-    // };
-
-    // const updateRowData = async (rowData: HealthCheck, callback: Function) => {
-    //     setOpen(true);
-    //     setData(rowData);
-    //     setReload(() => callback);
-    // };
-
     return (
         <React.Fragment>
             <CRUDTable
