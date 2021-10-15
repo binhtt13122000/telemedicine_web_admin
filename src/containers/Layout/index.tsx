@@ -26,7 +26,8 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({
             showSnackBar(
                 {
                     variant: "filled",
-                    color: "success",
+                    color: "warning",
+                    severity: "warning",
                     children: (
                         <React.Fragment>
                             <Typography variant="h6" align="left">
