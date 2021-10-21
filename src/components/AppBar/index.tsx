@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useHistory } from "react-router";
 import axios from "src/axios";
 import { API_ROOT_URL } from "src/configurations";
 
@@ -8,11 +9,13 @@ import logo from "../../assets/app-logo.png";
 import { AccountCircle } from "@mui/icons-material";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Menu, MenuItem } from "@mui/material";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import { Badge, Menu, MenuItem } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { green } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
 import { Account } from "src/containers/AccountManagement/models/Account.model";
@@ -21,6 +24,8 @@ import LocalStorageUtil from "src/utils/LocalStorageUtil";
 interface IAppBarWithDrawer {
     drawerWidth: number;
     handleDrawerToggle: () => void;
+    countOfUnread: number;
+    clearUnread: () => void;
 }
 
 type Notification = {
@@ -31,10 +36,12 @@ type Notification = {
     isSeen: boolean;
     isActive: boolean;
     user?: Account;
+    type: number;
 };
 
 const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer) => {
     const theme = useTheme();
+    const history = useHistory();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [anchorElNoti, setAnchorElNoti] = React.useState<null | HTMLElement>(null);
     const [notifications, setNotifications] = React.useState<Notification[]>([]);
@@ -50,6 +57,7 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
                 .get(`/notifications?user-id=${user.id}&page-offset=1&limit=20`)
                 .then((response) => {
                     setNotifications(response.data.content);
+                    props.clearUnread();
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console
@@ -85,6 +93,15 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
         setAnchorElNoti(null);
     };
 
+    const getBackgroundColor = (type: number) => {
+        switch (type) {
+            case 1:
+                return green["50"];
+            default:
+                break;
+        }
+    };
+
     return (
         <AppBar
             position="fixed"
@@ -116,7 +133,15 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
                     onClick={handleNotiMenu}
                     color="inherit"
                 >
-                    <CircleNotificationsIcon />
+                    {props.countOfUnread > 0 ? (
+                        <Badge badgeContent={props.countOfUnread || 4} color="error">
+                            <CircleNotificationsIcon />
+                        </Badge>
+                    ) : (
+                        <Badge badgeContent={props.countOfUnread} color="error">
+                            <CircleNotificationsIcon />
+                        </Badge>
+                    )}
                 </IconButton>
                 <Menu
                     id="noti-menu"
@@ -135,7 +160,7 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
                     PaperProps={{
                         style: {
                             maxHeight: 200,
-                            width: "30ch",
+                            width: "400px",
                         },
                     }}
                 >
@@ -153,8 +178,30 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
                         </Box>
                     ) : (
                         notifications.map((item) => (
-                            <MenuItem key={item.id} onClick={handleClose}>
-                                {item.content}
+                            <MenuItem
+                                key={item.id}
+                                onClick={() => history.push(item.content.split("-")[1])}
+                                disableRipple
+                            >
+                                <Box
+                                    sx={{
+                                        width: "100%",
+                                        height: 50,
+                                        backgroundColor: getBackgroundColor(item.type),
+                                        display: "flex",
+                                        alignItems: "center",
+                                        px: 2,
+                                    }}
+                                >
+                                    {item.type === 1 && (
+                                        <VerifiedUserIcon
+                                            color="success"
+                                            sx={{ mr: 2 }}
+                                            fontSize="large"
+                                        />
+                                    )}
+                                    {item.content.split("-")[0]}
+                                </Box>
                             </MenuItem>
                         ))
                     )}
