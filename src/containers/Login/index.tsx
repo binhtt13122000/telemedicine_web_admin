@@ -24,17 +24,18 @@ const Login: React.FC = () => {
                 alignItems="center"
             >
                 <Grid item xs={6} pt="6">
-                    <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                         <span style={{ fontFamily: "Philosopher", fontSize: 100 }}>
                             Telemedicine
                         </span>
                     </Grid>
-                    <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                         <Typography variant="overline" fontSize="20px">
                             Bắt đầu ứng dụng với
                         </Typography>
                     </Grid>
                     <Grid
+                        item
                         xs={12}
                         sx={{
                             display: "flex",

@@ -25,8 +25,12 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
     // eslint-disable-next-line no-console
     console.log("Received background message ", payload);
-
-    const notificationTitle = payload.notification.title;
+    let notificationTitle = "";
+    switch (payload.notification.title) {
+        case "1":
+            notificationTitle = "Có một tài khoản mới cần xác thực";
+            break;
+    }
     const notificationOptions = {
         body: payload.notification.body,
         icon: "/logo192.png",
