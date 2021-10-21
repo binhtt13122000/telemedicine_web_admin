@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Moment from "moment";
 import { useHistory, useParams } from "react-router";
@@ -114,7 +114,7 @@ const DoctorDetails: React.FC = () => {
         setOpen(false);
     };
     const handleCloseVerifyConfirmModal = async (
-        e: React.MouseEvent<HTMLButtonElement | MouseEvent>,
+        e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
         action: "CONFIRM" | "CANCEL"
     ) => {
         if (action === "CONFIRM") {
@@ -123,7 +123,7 @@ const DoctorDetails: React.FC = () => {
                 // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
                 if (response.status === 200) {
                     const accountRes: Doctors = response.data;
-                    const res = await axios.patch(`/doctors/${accountRes?.id}`);
+                    const res = await axios.patch(`/doctors/${accountRes?.id}?mode=ACCEPT`);
                     if (res.status === 200) {
                         setVerifyDoctor(!verifyDoctor);
                         showSnackbar({
@@ -131,6 +131,7 @@ const DoctorDetails: React.FC = () => {
                             variant: "filled",
                             severity: "success",
                         });
+                        window.location.reload();
                     }
                 }
             } catch (error) {
@@ -144,7 +145,7 @@ const DoctorDetails: React.FC = () => {
         setIsOpenConfirmModal(false);
     };
     const handleLockConfirmModal = async (
-        e: React.MouseEvent<HTMLButtonElement | MouseEvent>,
+        e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
         action: "CONFIRM" | "CANCEL"
     ) => {
         if (action === "CONFIRM") {
@@ -444,12 +445,12 @@ const DoctorDetails: React.FC = () => {
             <ConfirmModal
                 open={isOpenConfirmModal}
                 message="Bạn có muốn thực hiện thay đổi?"
-                handleClose={() => handleCloseVerifyConfirmModal}
+                handleClose={handleCloseVerifyConfirmModal}
             />
             <ConfirmModal
                 open={isOpenLockConfirmModal}
                 message="Bạn có muốn thực hiện thay đổi?"
-                handleClose={() => handleLockConfirmModal}
+                handleClose={handleLockConfirmModal}
             />
             <Box
                 sx={{
