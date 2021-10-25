@@ -22,7 +22,7 @@ export const routes = [
     },
     {
         id: 2,
-        name: "Lịch sử tư vấn",
+        name: "Danh sách lịch hẹn",
         path: "/health-checks",
         icon: history,
     },
