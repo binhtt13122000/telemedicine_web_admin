@@ -55,9 +55,9 @@ const DashBoardItem: React.FC<DashboardType> = (props: DashboardType) => {
                 {name}
             </Typography>
             <Box display="inline-flex" alignItems="center" justifyContent="center">
-                <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+                {/* <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
                     Đi đến
-                </Typography>
+                </Typography> */}
                 <ArrowForwardIcon sx={{ opacity: 0.72 }} fontSize="small" />
             </Box>
         </RootStyle>
