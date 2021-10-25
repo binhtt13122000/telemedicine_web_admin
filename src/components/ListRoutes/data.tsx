@@ -6,6 +6,7 @@ import doctor from "../../assets/doctor.png";
 import drugs from "../../assets/drugs.png";
 import history from "../../assets/history.png";
 import hospital from "../../assets/hospital.png";
+import jobSetting from "../../assets/job-settings.png";
 import major from "../../assets/major.png";
 import patient from "../../assets/patient.png";
 import setting from "../../assets/setting.png";
@@ -21,7 +22,7 @@ export const routes = [
     },
     {
         id: 2,
-        name: "Lịch sử tư vấn",
+        name: "Danh sách lịch hẹn",
         path: "/health-checks",
         icon: history,
     },
@@ -37,16 +38,10 @@ export const routes = [
         path: "/doctors",
         icon: doctor,
     },
-    // {
-    //     id: 5,
-    //     name: "Xác nhận Bác sĩ",
-    //     path: "/verify/doctors",
-    //     icon: <LocalHospitalIcon />,
-    // },
     {
         id: 5,
-        name: "Cấu hình chung",
-        icon: setting,
+        name: "Thông tin bác sĩ",
+        icon: jobSetting,
         children: [
             {
                 id: 6,
@@ -66,32 +61,39 @@ export const routes = [
                 path: "/majors",
                 icon: major,
             },
+        ],
+    },
+    {
+        id: 9,
+        name: "Cấu hình chung",
+        icon: setting,
+        children: [
             {
-                id: 9,
+                id: 10,
                 name: "Thuốc",
                 path: "/dash-board/general-setting/drug-manage",
                 icon: drugs,
             },
             {
-                id: 10,
+                id: 11,
                 name: "Triệu chứng",
                 path: "/symptoms",
                 icon: symptoms,
             },
             {
-                id: 11,
+                id: 12,
                 name: "Loại bệnh",
                 path: "/dash-board/general-setting/disease-manage",
                 icon: disease,
             },
             {
-                id: 12,
+                id: 13,
                 name: "Khung thời gian",
                 path: "/time-frames",
                 icon: timeframe,
             },
             {
-                id: 13,
+                id: 14,
                 name: "Tài khoản",
                 path: "/accounts",
                 icon: account,

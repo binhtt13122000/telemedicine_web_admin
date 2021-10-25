@@ -209,7 +209,7 @@ const DoctorDetails: React.FC = () => {
                             <ListItemIcon>
                                 <CakeOutlinedIcon />
                             </ListItemIcon>
-                            <ListItemText primary={Moment().format("L")} />
+                            <ListItemText primary={Moment(account?.dob).format("DD/MM/YYYY")} />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
