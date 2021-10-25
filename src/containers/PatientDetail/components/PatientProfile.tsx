@@ -44,7 +44,7 @@ const PatientProfile: React.FC<IPatientInfo> = (props: IPatientInfo) => {
     }
     return (
         <Card>
-            <CardContent sx={{ height: 557 }}>
+            <CardContent sx={{ height: 570 }}>
                 <Box
                     sx={{
                         alignItems: "center",
