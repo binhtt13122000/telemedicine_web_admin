@@ -28,7 +28,7 @@ const ConsultationHistory: React.FC<IConsultationHistory> = (props: IConsultatio
     };
 
     let healthCheckList = (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: 233 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: 288 }}>
             <Typography sx={{ color: "text.secondary" }}>Chưa có dữ liệu đăng ký tư vấn</Typography>
         </Box>
     );
@@ -100,7 +100,7 @@ const ConsultationHistory: React.FC<IConsultationHistory> = (props: IConsultatio
                 <Button
                     fullWidth
                     variant="text"
-                    size="large"
+                    size="small"
                     disabled={props.healthChecks?.length === 0}
                     onClick={viewMoreHandler}
                 >
