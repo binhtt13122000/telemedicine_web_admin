@@ -4,6 +4,7 @@ import axios from "src/axios";
 import { getTokenFirebase } from "src/config/firebase";
 import { API_ROOT_URL } from "src/configurations";
 
+import { Account } from "src/containers/AccountManagement/models/Account.model";
 import LocalStorageUtil from "src/utils/LocalStorageUtil";
 
 const Notifications = () => {
@@ -18,12 +19,13 @@ const Notifications = () => {
                     // eslint-disable-next-line no-console
                     console.log("Token is", data);
                     LocalStorageUtil.setItem("token_subcribe", data);
+                    const account = LocalStorageUtil.getItem("user") as Account;
                     try {
                         const response = await axios.post(
                             `${API_ROOT_URL}/notifications/connection`,
                             {
                                 token: data,
-                                id: Number(LocalStorageUtil.getItem("id_app")),
+                                email: account.email,
                             }
                         );
                         if (response.status === 200) {

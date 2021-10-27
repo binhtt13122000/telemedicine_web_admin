@@ -41,45 +41,32 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({
     };
     onMessageListener()
         .then((payload) => {
+            setCountOfUnread((prev) => {
+                return prev + 1;
+            });
             // eslint-disable-next-line no-console
             console.log(payload);
-            if (payload.notification) {
-                let title;
-                switch (payload.notification.title) {
-                    case undefined:
-                        break;
-                    case "1":
-                        title = "Có một tài khoản mới cần xác thực";
-                        break;
-                    default:
-                        break;
-                }
-                showSnackBar(
-                    {
-                        variant: "filled",
-                        color: "success",
-                        children: (
-                            <React.Fragment>
-                                <Typography variant="h6" align="left">
-                                    {title}
-                                </Typography>
-                                <Typography align="left">
-                                    {payload.notification?.body?.split("-")[0] || ""}
-                                </Typography>
-                            </React.Fragment>
-                        ),
+            showSnackBar(
+                {
+                    variant: "filled",
+                    color: "warning",
+                    severity: "warning",
+                    children: (
+                        <React.Fragment>
+                            <Typography variant="h6" align="left">
+                                {payload.notification?.title || ""}
+                            </Typography>
+                            <Typography align="left">{payload.notification?.body || ""}</Typography>
+                        </React.Fragment>
+                    ),
+                },
+                {
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right",
                     },
-                    {
-                        anchorOrigin: {
-                            vertical: "top",
-                            horizontal: "right",
-                        },
-                    }
-                );
-                setCountOfUnread((prev) => {
-                    return prev + 1;
-                });
-            }
+                }
+            );
         })
         // eslint-disable-next-line no-console
         .catch((err) => console.log("failed: ", err));
