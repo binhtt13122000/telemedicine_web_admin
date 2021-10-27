@@ -102,7 +102,9 @@ const PatientDetail: React.FC = () => {
     }, [email, getAccountByEmail]);
 
     useEffect(() => {
-        getHealthChecks(patient?.id, 5);
+        if (patient && patient.id) {
+            getHealthChecks(patient?.id, 5);
+        }
     }, [patient, getHealthChecks]);
 
     return (
