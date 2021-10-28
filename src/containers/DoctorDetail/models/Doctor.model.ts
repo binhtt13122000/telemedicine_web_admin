@@ -48,7 +48,7 @@ export type Cetification = {
     id?: string;
     doctorId: string;
     certificationId: string;
-    evidence?: string;
+    evidence: string;
     isActive: boolean;
     dateOfIssue: string;
     certification: {

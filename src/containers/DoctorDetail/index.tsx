@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import Moment from "moment";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
+import SwipeableViews from "react-swipeable-views";
+import { autoPlay } from "react-swipeable-views-utils";
 import axios from "src/axios";
 
-import { Box } from "@material-ui/core";
 import { ConfirmModal } from "src/components/ConfirmModal";
 import useSnackbar from "src/components/Snackbar/useSnackbar";
 
@@ -13,26 +14,16 @@ import { Account } from "../AccountManagement/models/Account.model";
 import { Doctors } from "./models/Doctor.model";
 
 import BlockIcon from "@mui/icons-material/Block";
-// import { Email } from "@mui/icons-material";
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import {
-    Accordion,
-    Chip,
-    Stack,
-    Rating,
-    Tooltip,
-    IconButton,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    CircularProgress,
-} from "@mui/material";
+import { CircularProgress, IconButton, Typography } from "@mui/material";
+import { Chip, Stack, Rating, Tooltip } from "@mui/material";
 import {
     Button,
     Avatar,
@@ -42,24 +33,19 @@ import {
     Container,
     Divider,
     Grid,
-    Typography,
     ListItem,
     ListItemIcon,
     ListItemText,
     List,
 } from "@mui/material";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import MobileStepper from "@mui/material/MobileStepper";
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { useTheme } from "@mui/material/styles";
 import { BoxProps } from "@mui/system";
 
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 function Item(props: BoxProps) {
     const { sx, ...other } = props;
     return (
@@ -81,7 +67,6 @@ function Item(props: BoxProps) {
     );
 }
 const DoctorDetails: React.FC = () => {
-    const [expanded, setExpanded] = React.useState<string | false>("panel1");
     const [loading, setLoading] = useState<boolean>(false);
     const history = useHistory();
     const [account, setAccount] = useState<Account>();
@@ -91,8 +76,20 @@ const DoctorDetails: React.FC = () => {
     const showSnackbar = useSnackbar();
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false);
     const [isOpenLockConfirmModal, setIsOpenLockConfirmModal] = useState<boolean>(false);
-    const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panel : false);
+    const [open, setOpen] = React.useState(false);
+    const theme = useTheme();
+    const [activeStep, setActiveStep] = React.useState(0);
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStepChange = (step: number) => {
+        setActiveStep(step);
     };
     const handleClickVerify = () => {
         setIsOpenConfirmModal(true);
@@ -133,15 +130,10 @@ const DoctorDetails: React.FC = () => {
         [history]
     );
 
-    const [open, setOpen] = React.useState(false);
-
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
     const handleCloseVerifyConfirmModal = async (
         e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
         action: "CONFIRM" | "CANCEL"
@@ -572,209 +564,82 @@ const DoctorDetails: React.FC = () => {
         </Card>
     );
 
-    const Certificate = (
-        <Card sx={{ height: 400, borderRadius: 5 }}>
-            <Box sx={{ ml: 2 }}>
+    const CertificateCarosuel = (
+        <Box sx={{ minWidth: 500, flexGrow: 1 }}>
+            <Paper
+                square
+                elevation={0}
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    height: 60,
+                    pl: 2,
+                    bgcolor: "background.default",
+                }}
+            >
                 <Typography variant="h6" component="div">
                     Chứng chỉ
                 </Typography>
-            </Box>
-            <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
-                {doctor?.certificationDoctors?.map((x) => {
-                    return (
-                        <>
-                            <Item key={x?.id}>
-                                <Box sx={{ display: "flex" }}>
-                                    <img
-                                        src={x?.evidence}
-                                        loading="lazy"
-                                        width="70%"
-                                        height="60%"
-                                    />
-                                </Box>
-
-                                <Typography variant="h6" component="h5">
-                                    {x?.certification?.name}
+            </Paper>
+            <AutoPlaySwipeableViews
+                axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+                index={activeStep}
+                onChangeIndex={handleStepChange}
+                enableMouseEvents
+            >
+                {doctor?.certificationDoctors?.map((step, index) => (
+                    <div key={step?.certification?.name}>
+                        <Box sx={{ display: "flex" }}>
+                            <Box sx={{ ml: "3rem", display: "flex" }}>
+                                <Typography variant="h6" component="div">
+                                    {step?.certification?.name}
                                 </Typography>
+                                {step?.isActive ? (
+                                    <IconButton>
+                                        <VerifiedIcon color="success" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton>
+                                        <BlockIcon color="error" />
+                                    </IconButton>
+                                )}
+                            </Box>
+                        </Box>
+                        {Math.abs(activeStep - index) <= 2 ? (
+                            <Box
+                                component="img"
+                                sx={{
+                                    height: 400,
+                                    display: "block",
 
-                                <Box sx={{ display: "flex", fontWeight: "200" }}>
-                                    <Typography variant="body2" paragraph>
-                                        Cấp ngày {moment(x?.dateOfIssue).format("DD/MM/YYYY")}
-                                    </Typography>
-                                    <Box sx={{ ml: 21 }}>
-                                        {x?.isActive ? (
-                                            <IconButton>
-                                                <VerifiedIcon color="success" />
-                                            </IconButton>
-                                        ) : (
-                                            <IconButton>
-                                                <BlockIcon color="error" />
-                                            </IconButton>
-                                        )}
-                                    </Box>
-                                </Box>
-                            </Item>
-                        </>
-                    );
-                })}
-            </Box>
-        </Card>
-    );
-    const doctorProfile = (
-        <form autoComplete="off" noValidate>
-            <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1bh-content"
-                    id="panel1bh-header"
-                >
-                    <Typography>Thông tin hành nghề</Typography>
-                </AccordionSummary>
-                <Divider />
-                <AccordionDetails>
-                    <Grid container spacing={3}>
-                        <Grid item md={6} xs={12}>
-                            <Typography color="textPrimary" gutterBottom>
-                                Mã chứng chỉ: {doctor?.certificateCode}
-                            </Typography>
-                            <Typography color="textPrimary" gutterBottom>
-                                Chứng chỉ hành nghề:
-                                <Link variant="body2" underline="none" onClick={handleClickOpen}>
-                                    View
-                                </Link>
-                                <Dialog open={open} onClose={handleClose}>
-                                    <DialogTitle>Chứng chỉ</DialogTitle>
-                                    <DialogContent>
-                                        <img
-                                            width="100%"
-                                            height="100%"
-                                            src={doctor?.practisingCertificate}
-                                            loading="lazy"
-                                        />
-                                    </DialogContent>
-                                </Dialog>
-                            </Typography>
-                            <Typography color="textPrimary" gutterBottom>
-                                Mô tả: {doctor?.description}
-                            </Typography>
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <Typography color="textPrimary" gutterBottom>
-                                Nơi cấp chứng chỉ: {doctor?.placeOfCertificate}
-                            </Typography>
-                            <Typography color="textPrimary" gutterBottom>
-                                Số lượng người tư vấn: {doctor?.numberOfConsultants}
-                            </Typography>
-                            <Typography color="textPrimary" gutterBottom>
-                                Phạm vi thực hành: {doctor?.scopeOfPractice}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion expanded={expanded === "panel2"} onChange={handleChange("panel2")}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2bh-content"
-                    id="panel2bh-header"
-                >
-                    <Typography sx={{ width: "33%", flexShrink: 0 }}>Chứng chỉ</Typography>
-                </AccordionSummary>
-                <Divider />
-                <AccordionDetails>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="left">Chuyên khoa</TableCell>
-                                    <TableCell align="left">Bằng chứng</TableCell>
-                                    <TableCell align="left">Ngày cấp</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {doctor?.certificationDoctors?.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell align="left">
-                                            {item.certification?.name}
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <img width="50%" height="130" src={item.evidence} />
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            {Moment(item.dateOfIssue).format("d MMM yy")}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion expanded={expanded === "panel3"} onChange={handleChange("panel3")}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel3bh-content"
-                    id="panel3bh-header"
-                >
-                    <Typography sx={{ width: "33%", flexShrink: 0 }}>Chuyên khoa</Typography>
-                </AccordionSummary>
-                <Divider />
-                <AccordionDetails>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="left">Mã chuyên khoa</TableCell>
-                                    <TableCell align="left">Tên chuyên khoa</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {doctor?.majorDoctors?.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell align="left">{item.majorId}</TableCell>
-                                        <TableCell align="left">{item.major?.name}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion expanded={expanded === "panel4"} onChange={handleChange("panel4")}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel4bh-content"
-                    id="panel4bh-header"
-                >
-                    <Typography sx={{ width: "33%", flexShrink: 0 }}>Bệnh viện công tác</Typography>
-                </AccordionSummary>
-                <Divider />
-                <AccordionDetails>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="left">Mã bệnh viện bệnh viện</TableCell>
-                                    <TableCell align="left">Tên bệnh viện</TableCell>
-                                    <TableCell align="left">Tình trạng làm việc</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {doctor?.hospitalDoctors?.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell align="left">
-                                            {item.hospital?.hospitalCode}
-                                        </TableCell>
-                                        <TableCell align="left">{item.hospital?.name}</TableCell>
-                                        <TableCell align="left">{item.isWorking}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </AccordionDetails>
-            </Accordion>
-        </form>
+                                    overflow: "hidden",
+                                    width: "100%",
+                                }}
+                                src={step?.evidence}
+                                alt={step?.certification?.name}
+                            />
+                        ) : null}
+                    </div>
+                ))}
+            </AutoPlaySwipeableViews>
+            <MobileStepper
+                steps={10}
+                position="static"
+                activeStep={activeStep}
+                nextButton={
+                    <Button size="small" onClick={handleNext} disabled={activeStep === 10 - 1}>
+                        Next
+                        {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                    </Button>
+                }
+                backButton={
+                    <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+                        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                        Back
+                    </Button>
+                }
+            />
+        </Box>
     );
 
     if (loading) {
@@ -805,9 +670,8 @@ const DoctorDetails: React.FC = () => {
                             {profile}
                         </Grid>
                         <Grid item lg={8} md={6} xs={12}>
-                            {/* <AccountProfileDetails /> */}
-                            <br />
-                            {Certificate}
+                            {CertificateCarosuel}
+                            {/* {Certificate} */}
                         </Grid>
                     </Grid>
                 </Container>
