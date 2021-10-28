@@ -69,9 +69,10 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
 
     const logout = async () => {
         try {
+            const account = LocalStorageUtil.getItem("user") as Account;
             const response = await axios.post(`${API_ROOT_URL}/logout`, {
                 token: LocalStorageUtil.getItem("token_subcribe"),
-                id: Number(LocalStorageUtil.getItem("id_app")),
+                email: account.email,
             });
             if (response.status === 200) {
                 LocalStorageUtil.clear();

@@ -49,7 +49,12 @@ const SnackbarProvider: React.FC = ({ children }) => {
                 autoHideDuration={4000}
                 {...snackbar}
             >
-                <AlertBase variant="filled" {...alert} onClose={handleClose} />
+                <AlertBase
+                    sx={{ alignItems: "center" }}
+                    variant="filled"
+                    {...alert}
+                    onClose={handleClose}
+                />
             </SnackbarBase>
         </SnackbarContext.Provider>
     );
