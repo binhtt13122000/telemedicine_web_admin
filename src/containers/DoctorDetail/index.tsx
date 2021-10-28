@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import Moment from "moment";
+import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import axios from "src/axios";
 
@@ -11,19 +12,26 @@ import useSnackbar from "src/components/Snackbar/useSnackbar";
 import { Account } from "../AccountManagement/models/Account.model";
 import { Doctors } from "./models/Doctor.model";
 
+import BlockIcon from "@mui/icons-material/Block";
 // import { Email } from "@mui/icons-material";
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import {
     Accordion,
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    DialogTitle,
+    Chip,
+    Stack,
     Rating,
+    Tooltip,
+    IconButton,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    CircularProgress,
 } from "@mui/material";
 import {
     Button,
@@ -50,7 +58,28 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { BoxProps } from "@mui/system";
 
+function Item(props: BoxProps) {
+    const { sx, ...other } = props;
+    return (
+        <Box
+            sx={{
+                bgcolor: "#fafafa",
+                color: "black",
+                p: 1,
+                m: 1,
+                borderRadius: 5,
+                textAlign: "left",
+                fontSize: 19,
+                fontWeight: "700",
+                boxShadow: 5,
+                ...sx,
+            }}
+            {...other}
+        />
+    );
+}
 const DoctorDetails: React.FC = () => {
     const [expanded, setExpanded] = React.useState<string | false>("panel1");
     const [loading, setLoading] = useState<boolean>(false);
@@ -279,6 +308,318 @@ const DoctorDetails: React.FC = () => {
         </Card>
     );
 
+    const Praticing = (
+        <Card sx={{ minHeight: "100%", borderRadius: 5 }}>
+            <Box sx={{ ml: 2, display: "flex" }}>
+                <Box>
+                    <Typography variant="h6" component="div">
+                        Hồ sơ
+                        {doctor?.isAcitve ? (
+                            <Tooltip title="Còn hoạt động">
+                                <IconButton>
+                                    <CheckCircleOutlineIcon color="success" />
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Không hoạt động">
+                                <IconButton>
+                                    <CheckCircleOutlineIcon color="error" />
+                                </IconButton>
+                            </Tooltip>
+                        )}
+                    </Typography>
+                </Box>
+                <Box sx={{ ml: 27 }}>
+                    <Typography variant="h6" component="h5"></Typography>
+                </Box>
+            </Box>
+            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
+                <Item>
+                    <Box sx={{ display: "block" }}>
+                        <Box sx={{ display: "flex" }}>
+                            <Stack direction="row" spacing={1}>
+                                <Typography
+                                    variant="body2"
+                                    component="div"
+                                    sx={{ fontWeight: "bold" }}
+                                >
+                                    Chứng chỉ hành nghề:
+                                </Typography>
+
+                                <Typography variant="body2" component="h5">
+                                    <Link
+                                        variant="body2"
+                                        underline="none"
+                                        onClick={handleClickOpen}
+                                    >
+                                        {" "}
+                                        View
+                                    </Link>
+                                </Typography>
+                            </Stack>
+                        </Box>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Mã chứng nhận:
+                            </Typography>
+                            <Typography variant="body2" component="h5">
+                                {doctor?.certificateCode}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Nơi cấp chứng nhận:
+                            </Typography>
+
+                            <Typography variant="body2" component="h5">
+                                {doctor?.placeOfCertificate}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Cấp ngày:
+                            </Typography>
+
+                            <Typography variant="body2" component="h5">
+                                {moment(doctor?.dateOfCertificate).format("DD/MM/YYYY")}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Phạm vi:
+                            </Typography>
+
+                            <Typography variant="body2" component="h5">
+                                {doctor?.scopeOfPractice}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Mô tả:
+                            </Typography>
+
+                            <Typography variant="body2" component="h5">
+                                {doctor?.description}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
+                                Số bệnh nhân đã tư vấn:
+                            </Typography>
+
+                            <Typography variant="body2" component="h5">
+                                {doctor?.numberOfConsultants}
+                                {/* <Chip icon={<PersonIcon />} label={data?.numberOfConsultants} /> */}
+                            </Typography>
+                        </Stack>
+
+                        <Box sx={{ mt: 1 }} />
+
+                        <Stack direction="row" spacing={1}>
+                            {/* <Typography
+                            variant="body2"
+                            component="div"
+                            sx={{ fontWeight: "bold" }}
+                        >
+                            Tình trạng:
+                        </Typography> */}
+
+                            <Typography variant="body2" component="h5">
+                                {doctor?.isVerify ? (
+                                    <Chip label="Đã xác thực" variant="outlined" color="success" />
+                                ) : (
+                                    <Chip label="Chưa xác thực" variant="outlined" color="error" />
+                                )}
+                            </Typography>
+                        </Stack>
+                    </Box>
+                </Item>
+            </Box>
+        </Card>
+    );
+
+    const Major = (
+        <Card sx={{ height: "100%", borderRadius: 5 }}>
+            <Box sx={{ ml: 2 }}>
+                <Typography variant="h6" component="div">
+                    Chuyên khoa
+                </Typography>
+            </Box>
+            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
+                <List
+                    sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                        position: "relative",
+                        overflow: "auto",
+                        maxHeight: 300,
+                        "& ul": { padding: 0 },
+                    }}
+                >
+                    {doctor?.majorDoctors?.map((item) => (
+                        <>
+                            <ListItem key={item?.id}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        borderRadius: 5,
+                                        bgcolor: "#fafafa",
+                                    }}
+                                >
+                                    <Box sx={{ display: "block" }}>
+                                        <Typography variant="h6" component="h5">
+                                            {item?.major?.name}
+                                            {item?.major?.name ? (
+                                                <Tooltip title="Còn hoạt động">
+                                                    <IconButton>
+                                                        <CheckCircleOutlineIcon color="success" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            ) : (
+                                                <Tooltip title="Không hoạt động">
+                                                    <IconButton>
+                                                        <CheckCircleOutlineIcon color="error" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            )}
+                                        </Typography>
+                                        <Typography variant="body2" component="h5">
+                                            Mô tả: Chuyên chữa trị các bệnh nội ngoại tiết{" "}
+                                            {item?.major?.description}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </ListItem>
+                        </>
+                    ))}
+                </List>
+                <Box sx={{ mb: 2 }} />
+            </Box>
+        </Card>
+    );
+
+    const Hospital = (
+        <Card sx={{ minHeight: "100%", borderRadius: 5 }}>
+            <Box sx={{ ml: 2 }}>
+                <Typography variant="h6" component="div">
+                    Bệnh viện
+                </Typography>
+            </Box>
+            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
+                <List
+                    sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                        position: "relative",
+                        overflow: "auto",
+                        maxHeight: 300,
+                        "& ul": { padding: 0 },
+                    }}
+                >
+                    {doctor?.hospitalDoctors?.map((item) => (
+                        <ListItem key={item?.id}>
+                            <Box sx={{ display: "flex", borderRadius: 5, bgcolor: "#fafafa" }}>
+                                <Box sx={{ display: "block" }}>
+                                    <Typography variant="h6" component="h5">
+                                        {item?.hospital?.name}
+                                        {item?.hospital?.name ? (
+                                            <Tooltip title="Còn hoạt động">
+                                                <IconButton>
+                                                    <CheckCircleOutlineIcon color="success" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        ) : (
+                                            <Tooltip title="Không hoạt động">
+                                                <IconButton>
+                                                    <CheckCircleOutlineIcon color="error" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        )}
+                                    </Typography>
+                                    <Typography variant="body2" component="h5">
+                                        Địa chỉ: {item?.hospital?.address}
+                                    </Typography>
+                                    <Typography variant="body2" component="h5">
+                                        Mô tả: {item?.hospital?.description}
+                                    </Typography>
+
+                                    <Box sx={{ mt: 1 }} />
+                                    <Typography variant="body2" component="h5">
+                                        Tình trạng:{" "}
+                                        {item?.isWorking ? (
+                                            <Chip
+                                                label="Đang công tác"
+                                                variant="outlined"
+                                                color="success"
+                                            />
+                                        ) : (
+                                            <Chip
+                                                label="Nghỉ công tác"
+                                                variant="outlined"
+                                                color="error"
+                                            />
+                                        )}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </ListItem>
+                    ))}
+                </List>
+                <Box sx={{ mb: 2 }} />
+            </Box>
+        </Card>
+    );
+
+    const Certificate = (
+        <Card sx={{ height: 400, borderRadius: 5 }}>
+            <Box sx={{ ml: 2 }}>
+                <Typography variant="h6" component="div">
+                    Chứng chỉ
+                </Typography>
+            </Box>
+            <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
+                {doctor?.certificationDoctors?.map((x) => {
+                    return (
+                        <>
+                            <Item key={x?.id}>
+                                <Box sx={{ display: "flex" }}>
+                                    <img
+                                        src={x?.evidence}
+                                        loading="lazy"
+                                        width="70%"
+                                        height="60%"
+                                    />
+                                </Box>
+
+                                <Typography variant="h6" component="h5">
+                                    {x?.certification?.name}
+                                </Typography>
+
+                                <Box sx={{ display: "flex", fontWeight: "200" }}>
+                                    <Typography variant="body2" paragraph>
+                                        Cấp ngày {moment(x?.dateOfIssue).format("DD/MM/YYYY")}
+                                    </Typography>
+                                    <Box sx={{ ml: 21 }}>
+                                        {x?.isActive ? (
+                                            <IconButton>
+                                                <VerifiedIcon color="success" />
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton>
+                                                <BlockIcon color="error" />
+                                            </IconButton>
+                                        )}
+                                    </Box>
+                                </Box>
+                            </Item>
+                        </>
+                    );
+                })}
+            </Box>
+        </Card>
+    );
     const doctorProfile = (
         <form autoComplete="off" noValidate>
             <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
@@ -466,7 +807,22 @@ const DoctorDetails: React.FC = () => {
                         <Grid item lg={8} md={6} xs={12}>
                             {/* <AccountProfileDetails /> */}
                             <br />
-                            {doctorProfile}
+                            {Certificate}
+                        </Grid>
+                    </Grid>
+                </Container>
+                <Box sx={{ mb: 2 }} />
+                <Container maxWidth="lg">
+                    <Grid container spacing={3}>
+                        <Grid item lg={4} md={6} xs={12}>
+                            {Praticing}
+                        </Grid>
+
+                        <Grid item lg={4} md={6} xs={12}>
+                            {Major}
+                        </Grid>
+                        <Grid item lg={4} md={6} xs={12}>
+                            {Hospital}
                         </Grid>
                     </Grid>
                 </Container>
