@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import Moment from "moment";
-import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import axios from "src/axios";
 
@@ -12,15 +11,15 @@ import { Account } from "../AccountManagement/models/Account.model";
 import CertificateCarosuel from "./component/CertificateCarosuel";
 import Hospital from "./component/Hospital";
 import Major from "./component/Major";
+import Practicing from "./component/Practicing";
 import { Doctors } from "./models/Doctor.model";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import { CircularProgress, IconButton, Typography } from "@mui/material";
-import { Chip, Stack, Rating, Tooltip } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
+import { Rating } from "@mui/material";
 import {
     Button,
     Avatar,
@@ -36,29 +35,7 @@ import {
     List,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { BoxProps } from "@mui/system";
 
-function Item(props: BoxProps) {
-    const { sx, ...other } = props;
-    return (
-        <Box
-            sx={{
-                bgcolor: "#fafafa",
-                color: "black",
-                p: 1,
-                m: 1,
-                borderRadius: 5,
-                textAlign: "left",
-                fontSize: 19,
-                fontWeight: "700",
-                boxShadow: 5,
-                ...sx,
-            }}
-            {...other}
-        />
-    );
-}
 const DoctorDetails: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const history = useHistory();
@@ -69,7 +46,6 @@ const DoctorDetails: React.FC = () => {
     const showSnackbar = useSnackbar();
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false);
     const [isOpenLockConfirmModal, setIsOpenLockConfirmModal] = useState<boolean>(false);
-    const [, setOpen] = React.useState(false);
 
     const handleClickVerify = () => {
         setIsOpenConfirmModal(true);
@@ -109,10 +85,6 @@ const DoctorDetails: React.FC = () => {
         },
         [history]
     );
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleCloseVerifyConfirmModal = async (
         e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
@@ -277,127 +249,6 @@ const DoctorDetails: React.FC = () => {
         </Card>
     );
 
-    const Praticing = (
-        <Card sx={{ minHeight: "100%", borderRadius: 5 }}>
-            <Box sx={{ ml: 2, display: "flex" }}>
-                <Box>
-                    <Typography variant="h6" component="div">
-                        Hồ sơ
-                        {doctor?.isAcitve ? (
-                            <Tooltip title="Còn hoạt động">
-                                <IconButton>
-                                    <CheckCircleOutlineIcon color="success" />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Không hoạt động">
-                                <IconButton>
-                                    <CheckCircleOutlineIcon color="error" />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </Typography>
-                </Box>
-                <Box sx={{ ml: 27 }}>
-                    <Typography variant="h6" component="h5"></Typography>
-                </Box>
-            </Box>
-            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
-                <Item>
-                    <Box sx={{ display: "block" }}>
-                        <Box sx={{ display: "flex" }}>
-                            <Stack direction="row" spacing={1}>
-                                <Typography
-                                    variant="body2"
-                                    component="div"
-                                    sx={{ fontWeight: "bold" }}
-                                >
-                                    Chứng chỉ hành nghề:
-                                </Typography>
-
-                                <Typography variant="body2" component="h5">
-                                    <Link
-                                        variant="body2"
-                                        underline="none"
-                                        onClick={handleClickOpen}
-                                    >
-                                        {" "}
-                                        View
-                                    </Link>
-                                </Typography>
-                            </Stack>
-                        </Box>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Mã chứng nhận:
-                            </Typography>
-                            <Typography variant="body2" component="h5">
-                                {doctor?.certificateCode}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Nơi cấp chứng nhận:
-                            </Typography>
-
-                            <Typography variant="body2" component="h5">
-                                {doctor?.placeOfCertificate}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Cấp ngày:
-                            </Typography>
-
-                            <Typography variant="body2" component="h5">
-                                {moment(doctor?.dateOfCertificate).format("DD/MM/YYYY")}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Phạm vi:
-                            </Typography>
-
-                            <Typography variant="body2" component="h5">
-                                {doctor?.scopeOfPractice}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Mô tả:
-                            </Typography>
-
-                            <Typography variant="body2" component="h5">
-                                {doctor?.description}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="div" sx={{ fontWeight: "bold" }}>
-                                Số bệnh nhân đã tư vấn:
-                            </Typography>
-
-                            <Typography variant="body2" component="h5">
-                                {doctor?.numberOfConsultants}
-                            </Typography>
-                        </Stack>
-
-                        <Box sx={{ mt: 1 }} />
-
-                        <Stack direction="row" spacing={1}>
-                            <Typography variant="body2" component="h5">
-                                {doctor?.isVerify ? (
-                                    <Chip label="Đã xác thực" variant="outlined" color="success" />
-                                ) : (
-                                    <Chip label="Chưa xác thực" variant="outlined" color="error" />
-                                )}
-                            </Typography>
-                        </Stack>
-                    </Box>
-                </Item>
-            </Box>
-        </Card>
-    );
-
     if (loading) {
         return <CircularProgress />;
     }
@@ -435,7 +286,7 @@ const DoctorDetails: React.FC = () => {
                 <Container maxWidth="lg">
                     <Grid container spacing={3}>
                         <Grid item lg={4} md={6} xs={12}>
-                            {Praticing}
+                            <Practicing doctors={doctor} />
                         </Grid>
 
                         <Grid item lg={4} md={6} xs={12}>
