@@ -3,25 +3,22 @@ import React, { useCallback, useEffect, useState } from "react";
 import Moment from "moment";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
-import SwipeableViews from "react-swipeable-views";
-import { autoPlay } from "react-swipeable-views-utils";
 import axios from "src/axios";
 
 import { ConfirmModal } from "src/components/ConfirmModal";
 import useSnackbar from "src/components/Snackbar/useSnackbar";
 
 import { Account } from "../AccountManagement/models/Account.model";
+import CertificateCarosuel from "./component/CertificateCarosuel";
+import Hospital from "./component/Hospital";
+import Major from "./component/Major";
 import { Doctors } from "./models/Doctor.model";
 
-import BlockIcon from "@mui/icons-material/Block";
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import VerifiedIcon from "@mui/icons-material/Verified";
 import { CircularProgress, IconButton, Typography } from "@mui/material";
 import { Chip, Stack, Rating, Tooltip } from "@mui/material";
 import {
@@ -40,12 +37,8 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import { useTheme } from "@mui/material/styles";
 import { BoxProps } from "@mui/system";
 
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 function Item(props: BoxProps) {
     const { sx, ...other } = props;
     return (
@@ -76,21 +69,8 @@ const DoctorDetails: React.FC = () => {
     const showSnackbar = useSnackbar();
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false);
     const [isOpenLockConfirmModal, setIsOpenLockConfirmModal] = useState<boolean>(false);
-    const [open, setOpen] = React.useState(false);
-    const theme = useTheme();
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [, setOpen] = React.useState(false);
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStepChange = (step: number) => {
-        setActiveStep(step);
-    };
     const handleClickVerify = () => {
         setIsOpenConfirmModal(true);
     };
@@ -141,7 +121,6 @@ const DoctorDetails: React.FC = () => {
         if (action === "CONFIRM") {
             try {
                 const response = await axios.get(`/doctors/${emailAcc}?search-type=Email`);
-                // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
                 if (response.status === 200) {
                     const accountRes: Doctors = response.data;
                     const res = await axios.patch(`/doctors/${accountRes?.id}?mode=ACCEPT`);
@@ -197,9 +176,7 @@ const DoctorDetails: React.FC = () => {
     };
 
     useEffect(() => {
-        // getAccountById(accountId);
         getAccountByEmail(emailAcc);
-        // verifyAccount(accountId);
     }, [emailAcc, getAccountByEmail]);
 
     const profile = (
@@ -401,21 +378,12 @@ const DoctorDetails: React.FC = () => {
 
                             <Typography variant="body2" component="h5">
                                 {doctor?.numberOfConsultants}
-                                {/* <Chip icon={<PersonIcon />} label={data?.numberOfConsultants} /> */}
                             </Typography>
                         </Stack>
 
                         <Box sx={{ mt: 1 }} />
 
                         <Stack direction="row" spacing={1}>
-                            {/* <Typography
-                            variant="body2"
-                            component="div"
-                            sx={{ fontWeight: "bold" }}
-                        >
-                            Tình trạng:
-                        </Typography> */}
-
                             <Typography variant="body2" component="h5">
                                 {doctor?.isVerify ? (
                                     <Chip label="Đã xác thực" variant="outlined" color="success" />
@@ -428,218 +396,6 @@ const DoctorDetails: React.FC = () => {
                 </Item>
             </Box>
         </Card>
-    );
-
-    const Major = (
-        <Card sx={{ height: "100%", borderRadius: 5 }}>
-            <Box sx={{ ml: 2 }}>
-                <Typography variant="h6" component="div">
-                    Chuyên khoa
-                </Typography>
-            </Box>
-            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
-                <List
-                    sx={{
-                        width: "100%",
-                        maxWidth: 360,
-                        bgcolor: "background.paper",
-                        position: "relative",
-                        overflow: "auto",
-                        maxHeight: 300,
-                        "& ul": { padding: 0 },
-                    }}
-                >
-                    {doctor?.majorDoctors?.map((item) => (
-                        <>
-                            <ListItem key={item?.id}>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        borderRadius: 5,
-                                        bgcolor: "#fafafa",
-                                    }}
-                                >
-                                    <Box sx={{ display: "block" }}>
-                                        <Typography variant="h6" component="h5">
-                                            {item?.major?.name}
-                                            {item?.major?.name ? (
-                                                <Tooltip title="Còn hoạt động">
-                                                    <IconButton>
-                                                        <CheckCircleOutlineIcon color="success" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip title="Không hoạt động">
-                                                    <IconButton>
-                                                        <CheckCircleOutlineIcon color="error" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            )}
-                                        </Typography>
-                                        <Typography variant="body2" component="h5">
-                                            Mô tả: Chuyên chữa trị các bệnh nội ngoại tiết{" "}
-                                            {item?.major?.description}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </ListItem>
-                        </>
-                    ))}
-                </List>
-                <Box sx={{ mb: 2 }} />
-            </Box>
-        </Card>
-    );
-
-    const Hospital = (
-        <Card sx={{ minHeight: "100%", borderRadius: 5 }}>
-            <Box sx={{ ml: 2 }}>
-                <Typography variant="h6" component="div">
-                    Bệnh viện
-                </Typography>
-            </Box>
-            <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
-                <List
-                    sx={{
-                        width: "100%",
-                        maxWidth: 360,
-                        bgcolor: "background.paper",
-                        position: "relative",
-                        overflow: "auto",
-                        maxHeight: 300,
-                        "& ul": { padding: 0 },
-                    }}
-                >
-                    {doctor?.hospitalDoctors?.map((item) => (
-                        <ListItem key={item?.id}>
-                            <Box sx={{ display: "flex", borderRadius: 5, bgcolor: "#fafafa" }}>
-                                <Box sx={{ display: "block" }}>
-                                    <Typography variant="h6" component="h5">
-                                        {item?.hospital?.name}
-                                        {item?.hospital?.name ? (
-                                            <Tooltip title="Còn hoạt động">
-                                                <IconButton>
-                                                    <CheckCircleOutlineIcon color="success" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        ) : (
-                                            <Tooltip title="Không hoạt động">
-                                                <IconButton>
-                                                    <CheckCircleOutlineIcon color="error" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        )}
-                                    </Typography>
-                                    <Typography variant="body2" component="h5">
-                                        Địa chỉ: {item?.hospital?.address}
-                                    </Typography>
-                                    <Typography variant="body2" component="h5">
-                                        Mô tả: {item?.hospital?.description}
-                                    </Typography>
-
-                                    <Box sx={{ mt: 1 }} />
-                                    <Typography variant="body2" component="h5">
-                                        Tình trạng:{" "}
-                                        {item?.isWorking ? (
-                                            <Chip
-                                                label="Đang công tác"
-                                                variant="outlined"
-                                                color="success"
-                                            />
-                                        ) : (
-                                            <Chip
-                                                label="Nghỉ công tác"
-                                                variant="outlined"
-                                                color="error"
-                                            />
-                                        )}
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </ListItem>
-                    ))}
-                </List>
-                <Box sx={{ mb: 2 }} />
-            </Box>
-        </Card>
-    );
-
-    const CertificateCarosuel = (
-        <Box sx={{ minWidth: 500, flexGrow: 1 }}>
-            <Paper
-                square
-                elevation={0}
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: 60,
-                    pl: 2,
-                    bgcolor: "background.default",
-                }}
-            >
-                <Typography variant="h6" component="div">
-                    Chứng chỉ
-                </Typography>
-            </Paper>
-            <AutoPlaySwipeableViews
-                axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-                index={activeStep}
-                onChangeIndex={handleStepChange}
-                enableMouseEvents
-            >
-                {doctor?.certificationDoctors?.map((step, index) => (
-                    <div key={step?.certification?.name}>
-                        <Box sx={{ display: "flex" }}>
-                            <Box sx={{ ml: "3rem", display: "flex" }}>
-                                <Typography variant="h6" component="div">
-                                    {step?.certification?.name}
-                                </Typography>
-                                {step?.isActive ? (
-                                    <IconButton>
-                                        <VerifiedIcon color="success" />
-                                    </IconButton>
-                                ) : (
-                                    <IconButton>
-                                        <BlockIcon color="error" />
-                                    </IconButton>
-                                )}
-                            </Box>
-                        </Box>
-                        {Math.abs(activeStep - index) <= 2 ? (
-                            <Box
-                                component="img"
-                                sx={{
-                                    height: 400,
-                                    display: "block",
-
-                                    overflow: "hidden",
-                                    width: "100%",
-                                }}
-                                src={step?.evidence}
-                                alt={step?.certification?.name}
-                            />
-                        ) : null}
-                    </div>
-                ))}
-            </AutoPlaySwipeableViews>
-            <MobileStepper
-                steps={10}
-                position="static"
-                activeStep={activeStep}
-                nextButton={
-                    <Button size="small" onClick={handleNext} disabled={activeStep === 10 - 1}>
-                        Next
-                        {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                    </Button>
-                }
-                backButton={
-                    <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                        Back
-                    </Button>
-                }
-            />
-        </Box>
     );
 
     if (loading) {
@@ -670,8 +426,8 @@ const DoctorDetails: React.FC = () => {
                             {profile}
                         </Grid>
                         <Grid item lg={8} md={6} xs={12}>
-                            {CertificateCarosuel}
-                            {/* {Certificate} */}
+                            <CertificateCarosuel doctors={doctor} />
+                            {/* {CertificateCarosuel} */}
                         </Grid>
                     </Grid>
                 </Container>
@@ -683,10 +439,10 @@ const DoctorDetails: React.FC = () => {
                         </Grid>
 
                         <Grid item lg={4} md={6} xs={12}>
-                            {Major}
+                            <Major doctors={doctor} />
                         </Grid>
                         <Grid item lg={4} md={6} xs={12}>
-                            {Hospital}
+                            <Hospital doctors={doctor} />
                         </Grid>
                     </Grid>
                 </Container>
