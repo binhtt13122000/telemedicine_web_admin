@@ -183,11 +183,7 @@ const Doctors: React.FC = () => {
                 </Box>
                 <TabPanel value={value} index={0}>
                     <CRUDTable
-                        title={
-                            window.location.href.includes("verify")
-                                ? "Danh sách bác sĩ đã xác nhận"
-                                : "Danh sách bác sĩ đã xác nhận"
-                        }
+                        title={"Danh sách bác sĩ đã xác nhận"}
                         enableFilter
                         sort
                         query={`${API_ROOT_URL}/doctors`}
@@ -201,38 +197,22 @@ const Doctors: React.FC = () => {
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <CRUDTable
-                        title={
-                            window.location.href.includes("verify")
-                                ? "Danh sách bác sĩ chưa xác nhận"
-                                : "Danh sách bác sĩ chưa xác nhận"
-                        }
+                        title={"Danh sách bác sĩ chưa xác nhận"}
                         enableFilter
                         sort
                         query={`${API_ROOT_URL}/doctors`}
-                        initParam={`&is-verify=${
-                            window.location.href.includes("verify") ? "-2" : "-2"
-                        }&`}
-                        columns={
-                            window.location.href.includes("verify") ? verifyColumns : verifyColumns
-                        }
+                        initParam={`&is-verify=${-2}&`}
+                        columns={verifyColumns}
                     />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     <CRUDTable
-                        title={
-                            window.location.href.includes("verify")
-                                ? "Danh sách bác sĩ đã từ chối"
-                                : "Danh sách bác sĩ đã từ chối"
-                        }
+                        title={"Danh sách bác sĩ đã từ chối"}
                         enableFilter
                         sort
                         query={`${API_ROOT_URL}/doctors`}
-                        initParam={`&is-verify=${
-                            window.location.href.includes("verify") ? "-1" : "-1"
-                        }&`}
-                        columns={
-                            window.location.href.includes("verify") ? verifyColumns : verifyColumns
-                        }
+                        initParam={`&is-verify=${-1}&`}
+                        columns={verifyColumns}
                     />
                 </TabPanel>
             </Box>
