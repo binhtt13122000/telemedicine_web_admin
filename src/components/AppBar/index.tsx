@@ -124,7 +124,7 @@ const AppBarWithDrawer: React.FC<IAppBarWithDrawer> = (props: IAppBarWithDrawer)
                     TeleMedicine App Admin
                 </Typography> */}
                 <Box sx={{ flexGrow: 1 }}>
-                    <img src={logo} alt="telemedicine-logo" width="210" height="30" />
+                    <img src={logo} alt="telemedicine-logo" width="145" height="36" />
                 </Box>
                 <IconButton
                     size="large"
