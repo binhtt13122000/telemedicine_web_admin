@@ -7,9 +7,11 @@ export type Doctors = {
     dateOfCertificate: string;
     scopeOfPractice: string;
     description: string;
-    numberOfConsultants: string;
+    numberOfConsultants: number;
+    numberOfCancels: number;
     rating: number;
-    isVerify: string;
+    isVerify: boolean;
+    isAcitve: boolean;
     certificationDoctors: Cetification[];
     hospitalDoctors: HospitalDoctor[];
     majorDoctors: Major[];
@@ -46,7 +48,8 @@ export type Cetification = {
     id?: string;
     doctorId: string;
     certificationId: string;
-    evidence?: string;
+    evidence: string;
+    isActive: boolean;
     dateOfIssue: string;
     certification: {
         id: string;
