@@ -45,10 +45,15 @@ const DoctorDetails: React.FC = () => {
     const [lockAccount, setLockAccount] = useState<boolean>(false);
     const showSnackbar = useSnackbar();
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false);
+    const [isOpenConfirmModal1, setIsOpenConfirmModal1] = useState<boolean>(false);
     const [isOpenLockConfirmModal, setIsOpenLockConfirmModal] = useState<boolean>(false);
 
     const handleClickVerify = () => {
         setIsOpenConfirmModal(true);
+    };
+
+    const handleClickVerify1 = () => {
+        setIsOpenConfirmModal1(true);
     };
 
     const handleClickLock = () => {
@@ -68,7 +73,7 @@ const DoctorDetails: React.FC = () => {
             try {
                 const response = await axios.get(`/accounts/${emailAcc}?search-type=Email`);
                 // eslint-disable-next-line no-console
-                console.log(response);
+                console.log(response.status);
                 if (response.status === 200) {
                     const accountRes: Account = response.data;
                     setAccount(accountRes);
@@ -116,24 +121,24 @@ const DoctorDetails: React.FC = () => {
         }
         setIsOpenConfirmModal(false);
     };
-    const handleLockConfirmModal = async (
+    const handleCloseVerifyConfirmModal1 = async (
         e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
         action: "CONFIRM" | "CANCEL"
     ) => {
         if (action === "CONFIRM") {
             try {
                 const response = await axios.get(`/doctors/${emailAcc}?search-type=Email`);
-                // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
                 if (response.status === 200) {
                     const accountRes: Doctors = response.data;
-                    const res = await axios.patch(`/doctors/${accountRes?.id}`);
+                    const res = await axios.patch(`/doctors/${accountRes?.id}?mode=CANCEL`);
                     if (res.status === 200) {
-                        setLockAccount(!lockAccount);
+                        setVerifyDoctor(!verifyDoctor);
                         showSnackbar({
                             children: "Cập nhật trạng thái tài khoản thành công",
                             variant: "filled",
                             severity: "success",
                         });
+                        window.location.reload();
                     }
                 }
             } catch (error) {
@@ -145,6 +150,38 @@ const DoctorDetails: React.FC = () => {
             }
         }
         setIsOpenConfirmModal(false);
+    };
+
+    const handleLockConfirmModal = async (
+        e: React.MouseEvent<HTMLButtonElement | globalThis.MouseEvent, globalThis.MouseEvent>,
+        action: "CONFIRM" | "CANCEL"
+    ) => {
+        if (action === "CONFIRM") {
+            try {
+                const response = await axios.get(`/accounts/${emailAcc}?search-type=Email`);
+                // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
+                if (response.status === 200) {
+                    const accountRes: Doctors = response.data;
+                    const res = await axios.patch(`/accounts/${accountRes?.id}`);
+                    if (res.status === 200) {
+                        setLockAccount(!lockAccount);
+                        showSnackbar({
+                            children: "Cập nhật trạng thái tài khoản thành công",
+                            variant: "filled",
+                            severity: "success",
+                        });
+                        window.location.reload();
+                    }
+                }
+            } catch (error) {
+                showSnackbar({
+                    children: "Cập nhật trạng thái tài khoản thất bại",
+                    variant: "filled",
+                    severity: "error",
+                });
+            }
+        }
+        setIsOpenLockConfirmModal(false);
     };
 
     useEffect(() => {
@@ -209,7 +246,7 @@ const DoctorDetails: React.FC = () => {
                 {doctor?.isVerify ? (
                     <React.Fragment>
                         <Button
-                            color={lockAccount ? "success" : "error"}
+                            color={account?.active ? "error" : "success"}
                             fullWidth
                             variant="text"
                             onClick={handleClickLock}
@@ -235,14 +272,16 @@ const DoctorDetails: React.FC = () => {
                         >
                             XÁC THỰC BÁC SĨ
                         </Button>
-                        <Button
-                            color={"error"}
-                            fullWidth
-                            variant="text"
-                            onClick={handleClickVerify}
-                        >
-                            TỪ CHỐI XÁC THỰC
-                        </Button>
+                        {doctor?.isVerify === null ? (
+                            <Button
+                                color={"error"}
+                                fullWidth
+                                variant="text"
+                                onClick={handleClickVerify1}
+                            >
+                                TỪ CHỐI XÁC THỰC
+                            </Button>
+                        ) : null}
                     </React.Fragment>
                 )}
             </CardActions>
@@ -259,6 +298,11 @@ const DoctorDetails: React.FC = () => {
                 open={isOpenConfirmModal}
                 message="Bạn có muốn thực hiện thay đổi?"
                 handleClose={handleCloseVerifyConfirmModal}
+            />
+            <ConfirmModal
+                open={isOpenConfirmModal1}
+                message="Bạn có muốn thực hiện thay đổi?"
+                handleClose={handleCloseVerifyConfirmModal1}
             />
             <ConfirmModal
                 open={isOpenLockConfirmModal}
