@@ -3,7 +3,7 @@ import React from "react";
 import { Doctors } from "../models/Doctor.model";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Card, IconButton, List, ListItem, Typography, Tooltip, Chip } from "@mui/material";
+import { Card, IconButton, List, ListItem, Typography, Tooltip } from "@mui/material";
 import { Box } from "@mui/system";
 
 export interface IHospitalForm {
@@ -73,8 +73,9 @@ const Hospital: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                                                 </Typography>
 
                                                 <Box sx={{ mt: 1 }} />
-                                                <Typography variant="body2" component="h5">
+                                                {/* <Typography variant="body2" component="h5">
                                                     Tình trạng:{" "}
+
                                                     {item?.isWorking ? (
                                                         <Chip
                                                             label="Đang công tác"
@@ -88,7 +89,7 @@ const Hospital: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                                                             color="error"
                                                         />
                                                     )}
-                                                </Typography>
+                                                </Typography> */}
                                             </Box>
                                         </Box>
                                     </ListItem>
