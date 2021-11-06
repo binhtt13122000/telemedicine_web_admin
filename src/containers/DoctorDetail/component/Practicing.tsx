@@ -66,7 +66,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                 </Box>
                 <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
                     <Item>
-                        <Box sx={{ display: "block" }}>
+                        <Box sx={{ display: "block", p: 2, mb: 1 }}>
                             <Box sx={{ display: "flex" }}>
                                 <Stack direction="row" spacing={1}>
                                     <Typography
@@ -89,6 +89,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                                     </Typography>
                                 </Stack>
                             </Box>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"
@@ -101,19 +102,21 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                                     {doctors?.certificateCode}
                                 </Typography>
                             </Stack>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"
                                     component="div"
                                     sx={{ fontWeight: "bold" }}
                                 >
-                                    Nơi cấp chứng nhận:
+                                    Nơi cấp:
                                 </Typography>
 
                                 <Typography variant="body2" component="h5">
                                     {doctors?.placeOfCertificate}
                                 </Typography>
                             </Stack>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"
@@ -127,6 +130,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                                     {moment(doctors?.dateOfCertificate).format("DD/MM/YYYY")}
                                 </Typography>
                             </Stack>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"
@@ -140,6 +144,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                                     {doctors?.scopeOfPractice}
                                 </Typography>
                             </Stack>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"
@@ -153,6 +158,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                                     {doctors?.description}
                                 </Typography>
                             </Stack>
+                            <Box sx={{ mb: 1 }} />
                             <Stack direction="row" spacing={1}>
                                 <Typography
                                     variant="body2"

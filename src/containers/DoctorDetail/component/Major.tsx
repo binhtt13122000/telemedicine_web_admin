@@ -28,7 +28,7 @@ const Major: React.FC<IMajorForm> = (props: IMajorForm) => {
                             bgcolor: "background.paper",
                             position: "relative",
                             overflow: "auto",
-                            maxHeight: 300,
+                            maxHeight: 450,
                             "& ul": { padding: 0 },
                         }}
                     >
@@ -40,6 +40,7 @@ const Major: React.FC<IMajorForm> = (props: IMajorForm) => {
                                             display: "flex",
                                             borderRadius: 5,
                                             bgcolor: "#fafafa",
+                                            p: 2,
                                         }}
                                     >
                                         <Box sx={{ display: "block" }}>

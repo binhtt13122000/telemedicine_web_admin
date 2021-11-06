@@ -9,7 +9,7 @@ import BlockIcon from "@mui/icons-material/Block";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { Button, IconButton, Paper, Typography } from "@mui/material";
+import { Button, Card, IconButton, Typography } from "@mui/material";
 import MobileStepper from "@mui/material/MobileStepper";
 import { useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
@@ -36,81 +36,113 @@ const CertificateCarosuel: React.FC<ICertificateForm> = (props: ICertificateForm
         setActiveStep(step);
     };
     return (
-        <Box sx={{ minWidth: 500, flexGrow: 1 }}>
-            <Paper
-                square
-                elevation={0}
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: 60,
-                    pl: 2,
-                    bgcolor: "background.default",
-                }}
-            >
-                <Typography variant="h6" component="div">
-                    Chứng chỉ
+        <React.Fragment>
+            {doctors?.certificationDoctors.length === 0 ? (
+                <Typography component="div" align="center">
+                    <Box sx={{ p: 1, fontSize: 18 }}>Chưa có chứng chỉ</Box>
                 </Typography>
-            </Paper>
-            <AutoPlaySwipeableViews
-                axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-                index={activeStep}
-                onChangeIndex={handleStepChange}
-                enableMouseEvents
-            >
-                {doctors?.certificationDoctors?.map((step, index) => (
-                    <div key={step?.certification?.name}>
-                        <Box sx={{ display: "flex" }}>
-                            <Box sx={{ ml: "3rem", display: "flex" }}>
-                                <Typography variant="h6" component="div">
-                                    {step?.certification?.name}
-                                </Typography>
-                                {step?.isActive ? (
-                                    <IconButton>
-                                        <VerifiedIcon color="success" />
-                                    </IconButton>
-                                ) : (
-                                    <IconButton>
-                                        <BlockIcon color="error" />
-                                    </IconButton>
-                                )}
-                            </Box>
+            ) : (
+                <>
+                    <Card sx={{ height: "100%", borderRadius: 4 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                height: 60,
+                                pl: 2,
+                                bgcolor: "#e0e0e0",
+                                // borderRadius: 3,
+                            }}
+                        >
+                            <Typography variant="h6" component="div">
+                                Chứng chỉ
+                            </Typography>
                         </Box>
-                        {Math.abs(activeStep - index) <= 2 ? (
-                            <Box
-                                component="img"
-                                sx={{
-                                    height: 400,
-                                    display: "block",
+                        <AutoPlaySwipeableViews
+                            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+                            index={activeStep}
+                            onChangeIndex={handleStepChange}
+                            enableMouseEvents
+                        >
+                            {doctors?.certificationDoctors?.map((step, index) => (
+                                <div key={step?.certification?.name}>
+                                    <Box sx={{ display: "flex" }}>
+                                        <Box sx={{ ml: "3rem", display: "flex" }}>
+                                            <Typography variant="h6" component="div">
+                                                {step?.certification?.name}
+                                            </Typography>
+                                            {step?.isActive ? (
+                                                <IconButton>
+                                                    <VerifiedIcon color="success" />
+                                                </IconButton>
+                                            ) : (
+                                                <IconButton>
+                                                    <BlockIcon color="error" />
+                                                </IconButton>
+                                            )}
+                                        </Box>
+                                    </Box>
+                                    {Math.abs(activeStep - index) <= 2 ? (
+                                        <Box
+                                            component="img"
+                                            sx={{
+                                                height: 400,
+                                                display: "block",
 
-                                    overflow: "hidden",
-                                    width: "100%",
-                                }}
-                                src={step?.evidence}
-                                alt={step?.certification?.name}
-                            />
-                        ) : null}
-                    </div>
-                ))}
-            </AutoPlaySwipeableViews>
-            <MobileStepper
-                steps={10}
-                position="static"
-                activeStep={activeStep}
-                nextButton={
-                    <Button size="small" onClick={handleNext} disabled={activeStep === 10 - 1}>
-                        Next
-                        {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                    </Button>
-                }
-                backButton={
-                    <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                        Back
-                    </Button>
-                }
-            />
-        </Box>
+                                                overflow: "hidden",
+                                                width: "100%",
+                                            }}
+                                            src={step?.evidence}
+                                            alt={step?.certification?.name}
+                                        />
+                                    ) : null}
+                                </div>
+                            ))}
+                        </AutoPlaySwipeableViews>
+                        <MobileStepper
+                            steps={doctors?.certificationDoctors.length || 0}
+                            position="static"
+                            activeStep={activeStep}
+                            nextButton={
+                                <Button
+                                    size="small"
+                                    onClick={handleNext}
+                                    disabled={
+                                        activeStep ===
+                                        (doctors?.certificationDoctors.length != 0 &&
+                                        doctors?.certificationDoctors.length != undefined
+                                            ? doctors?.certificationDoctors.length
+                                            : 1) -
+                                            1
+                                    }
+                                >
+                                    Next
+                                    {theme.direction === "rtl" ? (
+                                        <KeyboardArrowLeft />
+                                    ) : (
+                                        <KeyboardArrowRight />
+                                    )}
+                                </Button>
+                            }
+                            backButton={
+                                <Button
+                                    size="small"
+                                    onClick={handleBack}
+                                    disabled={activeStep === 0}
+                                >
+                                    {theme.direction === "rtl" ? (
+                                        <KeyboardArrowRight />
+                                    ) : (
+                                        <KeyboardArrowLeft />
+                                    )}
+                                    Back
+                                </Button>
+                            }
+                        />
+                    </Card>
+                </>
+            )}
+        </React.Fragment>
     );
 };
 

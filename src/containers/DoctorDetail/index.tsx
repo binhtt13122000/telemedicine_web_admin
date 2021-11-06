@@ -104,6 +104,7 @@ const DoctorDetails: React.FC = () => {
                     });
                     window.location.reload();
                 }
+                setIsOpenConfirmModal(false);
             } catch (error) {
                 showSnackbar({
                     children: "Cập nhật trạng thái tài khoản thất bại",
@@ -129,7 +130,9 @@ const DoctorDetails: React.FC = () => {
                         variant: "filled",
                         severity: "success",
                     });
+                    window.location.reload();
                 }
+                setIsOpenLockConfirmModal(false);
             } catch (error) {
                 showSnackbar({
                     children: "Cập nhật trạng thái tài khoản thất bại",
@@ -138,7 +141,7 @@ const DoctorDetails: React.FC = () => {
                 });
             }
         }
-        setIsOpenConfirmModal(false);
+        setIsOpenLockConfirmModal(false);
     };
 
     useEffect(() => {
@@ -146,7 +149,7 @@ const DoctorDetails: React.FC = () => {
     }, [emailAcc, getAccountByEmail]);
 
     const profile = (
-        <Card>
+        <Card sx={{ borderRadius: 5 }}>
             <CardContent sx={{ height: 450 }}>
                 <Box
                     sx={{
@@ -272,9 +275,11 @@ const DoctorDetails: React.FC = () => {
                         <Grid item lg={4} md={6} xs={12}>
                             {profile}
                         </Grid>
-                        <Grid item lg={8} md={6} xs={12}>
-                            <CertificateCarosuel doctors={doctor} />
-                            {/* {CertificateCarosuel} */}
+                        <Grid item lg={4} md={6} xs={12}>
+                            <Major doctors={doctor} />
+                        </Grid>
+                        <Grid item lg={4} md={6} xs={12}>
+                            <Hospital doctors={doctor} />
                         </Grid>
                     </Grid>
                 </Container>
@@ -284,12 +289,8 @@ const DoctorDetails: React.FC = () => {
                         <Grid item lg={4} md={6} xs={12}>
                             <Practicing doctors={doctor} />
                         </Grid>
-
-                        <Grid item lg={4} md={6} xs={12}>
-                            <Major doctors={doctor} />
-                        </Grid>
-                        <Grid item lg={4} md={6} xs={12}>
-                            <Hospital doctors={doctor} />
+                        <Grid item lg={8} md={6} xs={12}>
+                            <CertificateCarosuel doctors={doctor} />
                         </Grid>
                     </Grid>
                 </Container>
