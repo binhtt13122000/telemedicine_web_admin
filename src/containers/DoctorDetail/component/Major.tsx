@@ -28,7 +28,7 @@ const Major: React.FC<IMajorForm> = (props: IMajorForm) => {
                             bgcolor: "background.paper",
                             position: "relative",
                             overflow: "auto",
-                            maxHeight: 300,
+                            maxHeight: 450,
                             "& ul": { padding: 0 },
                         }}
                     >

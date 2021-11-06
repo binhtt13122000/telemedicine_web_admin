@@ -28,7 +28,7 @@ const Hospital: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                             bgcolor: "background.paper",
                             position: "relative",
                             overflow: "auto",
-                            maxHeight: 300,
+                            maxHeight: 450,
                             "& ul": { padding: 0 },
                         }}
                     >
