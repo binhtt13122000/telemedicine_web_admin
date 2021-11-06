@@ -50,6 +50,9 @@ const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
         setValue("address", data.address);
         setValue("description", data.description);
         setValue("isActive", data.isActive);
+        if (data.address) {
+            setPlace({ label: data.address });
+        }
         setChecked(data.isActive);
     }, [data, setValue, setChecked]);
     const submitHandler: SubmitHandler<Hospital> = (data: Hospital) => {
