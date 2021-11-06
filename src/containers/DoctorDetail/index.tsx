@@ -94,19 +94,15 @@ const DoctorDetails: React.FC = () => {
     ) => {
         if (action === "CONFIRM") {
             try {
-                const response = await axios.get(`/doctors/${emailAcc}?search-type=Email`);
-                if (response.status === 200) {
-                    const accountRes: Doctors = response.data;
-                    const res = await axios.patch(`/doctors/${accountRes?.id}?mode=${mode}`);
-                    if (res.status === 200) {
-                        setVerifyDoctor(!verifyDoctor);
-                        showSnackbar({
-                            children: "Cập nhật trạng thái tài khoản thành công",
-                            variant: "filled",
-                            severity: "success",
-                        });
-                        window.location.reload();
-                    }
+                const res = await axios.patch(`/doctors/${doctor?.id || 0}?mode=${mode}`);
+                if (res.status === 200) {
+                    setVerifyDoctor(!verifyDoctor);
+                    showSnackbar({
+                        children: "Cập nhật trạng thái tài khoản thành công",
+                        variant: "filled",
+                        severity: "success",
+                    });
+                    window.location.reload();
                 }
             } catch (error) {
                 showSnackbar({
@@ -124,19 +120,15 @@ const DoctorDetails: React.FC = () => {
     ) => {
         if (action === "CONFIRM") {
             try {
-                const response = await axios.get(`/doctors/${emailAcc}?search-type=Email`);
                 // const response = await axios.patch(`${API_ROOT_URL}/doctors/1`);
-                if (response.status === 200) {
-                    const accountRes: Doctors = response.data;
-                    const res = await axios.patch(`/doctors/${accountRes?.id}`);
-                    if (res.status === 200) {
-                        setLockAccount(!lockAccount);
-                        showSnackbar({
-                            children: "Cập nhật trạng thái tài khoản thành công",
-                            variant: "filled",
-                            severity: "success",
-                        });
-                    }
+                const res = await axios.patch(`/accounts/${account?.id}`);
+                if (res.status === 200) {
+                    setLockAccount(!lockAccount);
+                    showSnackbar({
+                        children: "Cập nhật trạng thái tài khoản thành công",
+                        variant: "filled",
+                        severity: "success",
+                    });
                 }
             } catch (error) {
                 showSnackbar({
@@ -237,14 +229,16 @@ const DoctorDetails: React.FC = () => {
                         >
                             XÁC THỰC BÁC SĨ
                         </Button>
-                        <Button
-                            color={"error"}
-                            fullWidth
-                            variant="text"
-                            onClick={() => handleClickVerify("CANCEL")}
-                        >
-                            TỪ CHỐI XÁC THỰC
-                        </Button>
+                        {doctor?.isVerify === null && (
+                            <Button
+                                color={"error"}
+                                fullWidth
+                                variant="text"
+                                onClick={() => handleClickVerify("CANCEL")}
+                            >
+                                TỪ CHỐI XÁC THỰC
+                            </Button>
+                        )}
                     </React.Fragment>
                 )}
             </CardActions>

@@ -1,5 +1,6 @@
 import React from "react";
 
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { Hospital } from "../../models/Hospital.model";
@@ -111,6 +112,7 @@ const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                         defaultValue={props.data.address}
                         {...register("address")}
                     />
+                    <GooglePlacesAutocomplete />
                     <TextField
                         id="description"
                         label="Mô tả"

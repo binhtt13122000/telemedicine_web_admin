@@ -46,7 +46,6 @@ const SnackbarProvider: React.FC = ({ children }) => {
                 }}
                 open={open}
                 onClose={handleClose}
-                autoHideDuration={4000}
                 {...snackbar}
             >
                 <AlertBase
