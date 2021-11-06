@@ -26,10 +26,10 @@ export const ConfirmModal: React.FC<IConfirmModel> = (props: IConfirmModel) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={(e) => handleClose(e, "CONFIRM")} color="primary" autoFocus>
-                    Confirm
+                    Xác nhận
                 </Button>
                 <Button onClick={(e) => handleClose(e, "CANCEL")} color="secondary">
-                    Cancel
+                    Hủy
                 </Button>
             </DialogActions>
         </Dialog>
