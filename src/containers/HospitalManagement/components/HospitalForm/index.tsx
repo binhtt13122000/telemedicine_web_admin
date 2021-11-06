@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import GooglePlacesAutocomplete, {
+    getLatLng,
+    geocodeByAddress,
+} from "react-google-places-autocomplete";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { Hospital } from "../../models/Hospital.model";
@@ -17,6 +20,7 @@ export interface IHospitalForm {
 const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
     const { data } = props;
     const [checked, setChecked] = React.useState<boolean>(data.isActive);
+    const [place, setPlace] = useState<any>(null);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
@@ -51,8 +55,22 @@ const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
     const submitHandler: SubmitHandler<Hospital> = (data: Hospital) => {
         // eslint-disable-next-line no-console
         console.log(data);
-        if (data) {
-            props.handleClose("SAVE", data, clearErrors);
+        if (place) {
+            geocodeByAddress(place.label)
+                .then((results) => getLatLng(results[0]))
+                .then(({ lat, lng }) => {
+                    // eslint-disable-next-line no-console
+                    console.log("Successfully got latitude and longitude", { lat, lng });
+                    // eslint-disable-next-line no-console
+                    console.log(place);
+                    if (data && lat && lng) {
+                        data.lat = lat;
+                        data.long = lng;
+                        data.address = place.label;
+                        setPlace(null);
+                        props.handleClose("SAVE", data, clearErrors);
+                    }
+                });
         }
     };
 
@@ -105,14 +123,36 @@ const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                         helperText={errors.name && "Tên bệnh viện là bắt buộc"}
                         {...register("name", { required: true })}
                     />
-                    <TextField
-                        id="hospital-address"
-                        label="Địa chỉ"
-                        variant="outlined"
-                        defaultValue={props.data.address}
-                        {...register("address")}
-                    />
-                    <GooglePlacesAutocomplete />
+                    <Box id="address_box" sx={{ width: "100%" }}>
+                        <GooglePlacesAutocomplete
+                            apiOptions={{ language: "vi", region: "vn" }}
+                            autocompletionRequest={{
+                                componentRestrictions: {
+                                    country: ["vn"],
+                                },
+                            }}
+                            selectProps={{
+                                styles: {
+                                    container: (provided) => ({
+                                        ...provided,
+                                        width: "96% !important",
+                                    }),
+                                    input: (provided) => ({
+                                        ...provided,
+                                        height: "40px",
+                                    }),
+                                    menu: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: "white",
+                                    }),
+                                },
+                                value: place,
+                                onChange: setPlace,
+                                placeholder: "Địa chỉ",
+                            }}
+                            apiKey="AIzaSyBnFc2k4rFaznVW9zfTJQz2s92PZOcqWTs"
+                        />
+                    </Box>
                     <TextField
                         id="description"
                         label="Mô tả"
@@ -150,7 +190,10 @@ const HospitalForm: React.FC<IHospitalForm> = (props: IHospitalForm) => {
                     >
                         <Button
                             variant="outlined"
-                            onClick={() => props.handleClose("CANCEL", undefined, clearErrors)}
+                            onClick={() => {
+                                props.handleClose("CANCEL", undefined, clearErrors);
+                                setPlace(null);
+                            }}
                         >
                             Hủy
                         </Button>

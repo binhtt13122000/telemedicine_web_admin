@@ -5,4 +5,6 @@ export type Hospital = {
     address: string;
     description?: string;
     isActive: boolean;
+    lat?: number;
+    long?: number;
 };
