@@ -126,6 +126,7 @@ const Hospitals: React.FC = () => {
             if (data) {
                 if (data.id) {
                     updateHospital(data);
+                    window.location.reload();
                 } else {
                     postHospital(data);
                 }
