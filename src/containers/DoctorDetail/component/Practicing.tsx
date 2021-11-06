@@ -66,7 +66,7 @@ const Practicing: React.FC<IPracticing> = (props: IPracticing) => {
                 </Box>
                 <Box sx={{ display: "block", gridTemplateColumns: "repeat(3, 1fr)" }}>
                     <Item>
-                        <Box sx={{ display: "block" }}>
+                        <Box sx={{ display: "block", p: 2 }}>
                             <Box sx={{ display: "flex" }}>
                                 <Stack direction="row" spacing={1}>
                                     <Typography

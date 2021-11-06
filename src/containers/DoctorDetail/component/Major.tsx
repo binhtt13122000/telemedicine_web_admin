@@ -40,6 +40,7 @@ const Major: React.FC<IMajorForm> = (props: IMajorForm) => {
                                             display: "flex",
                                             borderRadius: 5,
                                             bgcolor: "#fafafa",
+                                            p: 2,
                                         }}
                                     >
                                         <Box sx={{ display: "block" }}>
