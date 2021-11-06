@@ -43,11 +43,13 @@ const DoctorDetails: React.FC = () => {
     const [doctor, setDoctor] = useState<Doctors>();
     const [verifyDoctor, setVerifyDoctor] = useState<boolean>(false);
     const [lockAccount, setLockAccount] = useState<boolean>(false);
+    const [mode, setMode] = useState<"ACCEPT" | "CANCEL">("ACCEPT");
     const showSnackbar = useSnackbar();
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false);
     const [isOpenLockConfirmModal, setIsOpenLockConfirmModal] = useState<boolean>(false);
 
-    const handleClickVerify = () => {
+    const handleClickVerify = (mode: "ACCEPT" | "CANCEL") => {
+        setMode(mode);
         setIsOpenConfirmModal(true);
     };
 
@@ -95,7 +97,7 @@ const DoctorDetails: React.FC = () => {
                 const response = await axios.get(`/doctors/${emailAcc}?search-type=Email`);
                 if (response.status === 200) {
                     const accountRes: Doctors = response.data;
-                    const res = await axios.patch(`/doctors/${accountRes?.id}?mode=ACCEPT`);
+                    const res = await axios.patch(`/doctors/${accountRes?.id}?mode=${mode}`);
                     if (res.status === 200) {
                         setVerifyDoctor(!verifyDoctor);
                         showSnackbar({
@@ -231,7 +233,7 @@ const DoctorDetails: React.FC = () => {
                             color={"success"}
                             fullWidth
                             variant="text"
-                            onClick={handleClickVerify}
+                            onClick={() => handleClickVerify("ACCEPT")}
                         >
                             XÁC THỰC BÁC SĨ
                         </Button>
@@ -239,7 +241,7 @@ const DoctorDetails: React.FC = () => {
                             color={"error"}
                             fullWidth
                             variant="text"
-                            onClick={handleClickVerify}
+                            onClick={() => handleClickVerify("CANCEL")}
                         >
                             TỪ CHỐI XÁC THỰC
                         </Button>
