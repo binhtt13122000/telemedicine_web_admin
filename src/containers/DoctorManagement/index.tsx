@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import { collection, onSnapshot, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "src/config/firebase";
 import { API_ROOT_URL } from "src/configurations";
 
 import CRUDTable from "src/components/CRUDTable";
 import { IColumn } from "src/components/CRUDTable/Models";
 
 import { Doctor } from "../PatientManagement/models/Doctor.model";
+import DoctorService from "./services/Doctor.service";
 
-import { Avatar, Rating, Tab, Tabs, Typography } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Rating,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Tabs,
+    Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 
 interface TabPanelProps {
@@ -179,6 +194,7 @@ const Doctors: React.FC = () => {
                         <Tab label="Bác sĩ đã xác nhận" />
                         <Tab label="Bác sĩ chưa xác nhận" />
                         <Tab label="Bác sĩ đã từ chối" />
+                        <Tab label="Yêu cầu chỉnh sửa hồ sơ" />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
@@ -215,8 +231,97 @@ const Doctors: React.FC = () => {
                         columns={verifyColumns}
                     />
                 </TabPanel>
+                <TabPanel value={value} index={3}>
+                    <TableConfirmEdit />
+                </TabPanel>
             </Box>
         </React.Fragment>
+    );
+};
+
+const TableConfirmEdit: React.FC = () => {
+    const [queryStr, setQuery] = useState<Array<{ email: string; query: any }>>([]);
+    useEffect(() => {
+        onSnapshot(collection(db, "update"), (doc) => {
+            // eslint-disable-next-line no-console
+            console.log("Current data: ", doc.docs);
+            let list = doc.docs.map((x) => {
+                let data = JSON.parse(x.data().model);
+                if (data.HospitalDoctors === "undefined") {
+                    data.HospitalDoctors = undefined;
+                } else {
+                    data.HospitalDoctors = JSON.parse(data.HospitalDoctors);
+                }
+                if (data.MajorDoctors === "undefined") {
+                    data.MajorDoctors = undefined;
+                } else {
+                    data.MajorDoctors = JSON.parse(data.MajorDoctors);
+                }
+                return {
+                    email: x.data().email,
+                    query: data,
+                };
+            });
+            // eslint-disable-next-line no-console
+            console.log("Current datas: ", list);
+            setQuery(list);
+        });
+    }, []);
+
+    const update = (dataMajorAdd: any) => {
+        DoctorService.createMajor(dataMajorAdd);
+    };
+
+    const remove = async (email: string) => {
+        const q = query(collection(db, "update"), where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+        let id = "";
+        querySnapshot.forEach((document) => {
+            id = document.id;
+        });
+        await deleteDoc(doc(db, "update", id));
+    };
+    return (
+        <Table>
+            <TableHead>
+                <TableRow>
+                    <TableCell>STT</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Thao tác</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {queryStr.map((x, index) => {
+                    return (
+                        <TableRow key={index}>
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>
+                                <a href={"/doctors/" + x.email}>{x.email}</a>
+                            </TableCell>
+                            <TableCell>
+                                <Box display="flex">
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => update(x.query)}
+                                        color="primary"
+                                        sx={{ mr: 3 }}
+                                    >
+                                        Đồng ý
+                                    </Button>
+                                    <Button
+                                        onClick={() => remove(x.email)}
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        Từ chối
+                                    </Button>
+                                </Box>
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
+            </TableBody>
+        </Table>
     );
 };
 
